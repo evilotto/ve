@@ -61,7 +61,7 @@ locateplane(px, py, sflg)
 	char    wing;
 	char    buf[BUFSIZ];
 
-	getline(buf, "Plane number: ", NOX);
+	ve_getline(buf, "Plane number: ", NOX);
 	if (*buf) {
 		wing = buf[0];
 		if (wing >= '0' && wing <= '9')

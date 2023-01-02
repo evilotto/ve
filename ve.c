@@ -24,9 +24,12 @@ char   *preload[] = {mapfile, dumpfile, 0};
 
 Sector *map[MAPSIZE][MAPSIZE];
 
+Unit *units[MAXUNITS];
+
 Ship   *ships[MAXSHIPS];
 
 Plane  *planes[MAXPLANES];
+
 
 Item    items[] = {
 	"civ", 3, CIV,
@@ -145,6 +148,8 @@ int     range = 10;			    /* Range for survey */
 int     curx, cury;			    /* Current x and y
 					     * coordinates in map
 					     * array */
+int     unitcount = 0;			    /* Total number	of
+					     * units in units array	 */
 int     shipcount = 0;			    /* Total number	of
 					     * ships in ships array	 */
 int     planecount = 0;			    /* Total number of
@@ -181,9 +186,6 @@ char	dumpfile[BUFSIZ] = SAVDUMP;
 char    _obuf[BUFSIZ];
 char   *invo_name;
 int     need_dump = FALSE;
-#ifdef VMS
-char   *tpucommand;
-#endif
 
 void
 load_file(name, quiet)
@@ -230,8 +232,6 @@ main(argc, argv)
 
 	invo_name = argv[0];
 	setbuf(stdout, _obuf);
-	tpucommand = (char *)malloc(132);
-	strcpy(tpucommand,"tpu ");
 
 #ifdef ACCTNG
 	time(&sclock);
@@ -286,6 +286,8 @@ main(argc, argv)
 	(void) signal(SIGQUIT, SIG_IGN);
 
 	(void) initscr();		    /* Start up curses etc. */
+	intrflush(stdscr, FALSE);
+	keypad(stdscr, TRUE);
 	incurses = TRUE;
 	presetty();
 	commands();			    /* Process all commands */
@@ -510,7 +512,6 @@ commands()
 				(void) strcpy(prbuf, bp);
 			if (outf)
 				(void) fclose(outf);
-#ifndef VMS
 			if (fork() == 0) {
 				move(LINES - 1, 0);
 				clrtoeol();
@@ -521,12 +522,6 @@ commands()
 			} else
 				(void) wait(&status);
 			presetty();
-#else
-			clear();
-			lib$spawn();
-			clear();
-			refresh();
-#endif
 			clear();
 			mapdr(surmap);
 			censusinfo(x, y);
@@ -553,7 +548,7 @@ commands()
 			break;
 
 		case 'm':
-			getline(prbuf, "mark: ", NOX);
+			ve_getline(prbuf, "mark: ", NOX);
 			/* Change mark */
 			if (*prbuf)
 				curmark = *prbuf;
@@ -602,7 +597,7 @@ commands()
 
 		case 'a':
 			if (outf) {	    /* Append to the file */
-				getline(prbuf, "", EX);
+				ve_getline(prbuf, "", EX);
 				x = curx;
 				y = cury;
 				if (*prbuf) {
@@ -617,7 +612,7 @@ commands()
 		case 'i':		    /* Read in input data
 					     * (map,...) */
 		case 'I':
-			getline(buf, "New input file: ", NOX);
+			ve_getline(buf, "New input file: ", NOX);
 			need_dump = TRUE;
 			load_file(buf, FALSE);
 			mapdr(surmap);
@@ -627,7 +622,7 @@ commands()
 		case 'o':		    /* Change/create output
 					     * file */
 		case 'O':
-			getline(buf, "New output file: ", NOX);
+			ve_getline(buf, "New output file: ", NOX);
 			if (outf)
 				(void) fclose(outf);
 			if ((outf = fopen(buf, c == 'O' ? "w" : "a")) == NULL)
@@ -637,13 +632,13 @@ commands()
 			break;
 
 		case 's':		    /* Set a macro */
-			getline(buf, "macro name: ", NOX);
-			getline(prbuf, "define: ", NOX);
+			ve_getline(buf, "macro name: ", NOX);
+			ve_getline(prbuf, "define: ", NOX);
 			macros[*buf] = strdup(prbuf);
 			break;
 
 		case 'd':		    /* Delete a macro */
-			getline(buf, "delete macro: ", NOX);
+			ve_getline(buf, "delete macro: ", NOX);
 			if (macros[*buf])
 				free(macros[*buf]);
 			macros[*buf] = 0;
@@ -661,14 +656,10 @@ commands()
 			break;
 
 		case 'V':
-#ifndef VMS
 			if ((bp = getenv("VISUAL")) == NULL)
 				(void) strcpy(prbuf, VIPATH);
 			else
 				(void) strcpy(prbuf, bp);
-#else
-			strcat(tpucommand,oname);
-#endif
 			goto forkeditor;
 
 		case 'E':
@@ -681,7 +672,6 @@ commands()
 				move(LINES - 1, 0);
 				clrtoeol();
 				refresh();
-#ifndef VMS
 				if (fork() == 0) {
 					endtty();
 					execl(prbuf, prbuf, oname, 0);
@@ -689,11 +679,6 @@ commands()
 				} else
 					(void) wait(&status);
 				presetty();
-#else
-				tpu$tpu(tpucommand);
-				clear();
-				refresh();
-#endif
 				clear();
 				mapdr(surmap);
 				censusinfo(x, y);
@@ -704,14 +689,14 @@ commands()
 			break;
 
 		case 'S':		    /* Survey */
-			getline(buf, "Survey: ", NOX);
+			ve_getline(buf, "Survey: ", NOX);
 			survey(buf);
 			mapdr(surmap = SURV);
 			break;
 
 		case 'R':		    /* Range for Survey */
 			sprintf(prbuf, "Range (%d): ", range * 10);
-			getline(buf, prbuf, NOX);
+			ve_getline(buf, prbuf, NOX);
 			if (*buf) {
 				range = atoi(buf) / 10;
 				if (range < 1) {
@@ -726,7 +711,7 @@ commands()
 			break;
 
 		case 'r':		    /* Trace route */
-			getline(buf, "Route: ", FALSE);
+			ve_getline(buf, "Route: ", FALSE);
 			for (crou = -1, ip = items; ip->len; ip++)
 				if (!strncmp(buf, ip->nm, ip->len)) {
 					crou = ip->value;
@@ -752,7 +737,7 @@ commands()
 			break;
 
 		case 'l':
-			getline(buf, "Leap to: ", TRUE);
+			ve_getline(buf, "Leap to: ", TRUE);
 			if (*buf && (bp = (char *) index(buf, ','))) {
 				tx = atoi(buf);
 				ty = atoi(++bp);
@@ -820,11 +805,11 @@ getac()
 
 
 /*
- * getline - Get input line from the bottom of the screen,
+ * ve_getline - Get input line from the bottom of the screen,
  *           using pr as a prompt if non-zero. If ex is set,
  *           then expand macros.
  */
-getline(bp, pr, ex)
+ve_getline(bp, pr, ex)
 	char   *bp;
 	char   *pr;
 	int     ex;
@@ -856,15 +841,9 @@ getline(bp, pr, ex)
 			}
 			continue;
 		}
-#ifndef VMS
-		if (c == _tty.sg_erase)	    /* hack _tty set by 4.?
-					     * curses */
-			c = '\b';
-		else if (c == _tty.sg_kill) /* ditto - newer curses
-					     * has func */
-			c = '@';
-#endif
 		switch (c) {
+		case KEY_BACKSPACE:
+		case KEY_DC:
 		case '\b':
 			if (ip > bp) {
 				ip--;
@@ -913,6 +892,8 @@ getline(bp, pr, ex)
 				break;
 			continue;
 
+		case KEY_EOL:
+		case 0x15:
 		case '@':
 			move(LINES - 1, 0); /* erase the line */
 			if (*pr)
@@ -1188,7 +1169,7 @@ mark(sp, pass)
  */
 presetty()
 {
-	crmode();
+	cbreak();
 	noecho();
 /*        nonl();	*/
 }
@@ -1260,16 +1241,13 @@ processmove(bp, ip)
 /*
  * putline - Do a printw at the bottom of the screen.
  */
-/*VARARGS1*/
 void
-putline(va_alist)
-	va_dcl
+putline(char *fmt, ...)
 {
 	va_list	ap;
-	char	*fmt, buf[ 1024 ];
+	char	buf[ 1024 ];
 
-	va_start(ap);
-	fmt = va_arg(ap, char *);
+	va_start(ap, fmt);
 	(void)uprintf(buf, fmt, &ap);
 	va_end(ap);
 	if (!incurses) {
@@ -1289,7 +1267,7 @@ query()
 	char   *bp = buf;
 	char   *tp;
 
-	getline(bp, "?", NOX);
+	ve_getline(bp, "?", NOX);
 	if (!*bp)
 		return;
 	clearmks(0);

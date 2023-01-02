@@ -2,6 +2,8 @@
 
 # include "ve.h"
 
+int chainsaw = FALSE;
+
 /*
  * Dump file processing routine
  *
@@ -121,7 +123,7 @@ readdump(fp)
 #else
 		mp->own = 1;
 		vp->val[COU] = -1;
-#endif OWNER
+#endif /* OWNER */
 		vp->val[DES] = merge(des, x, y, TRUE);
 		if (isupper(sdes)) {
 			mp->own = 2;
@@ -147,6 +149,6 @@ readdump(fp)
 		vp->dist[LCM] = distval(lp->thresh[LCM]);
 		vp->dist[HCM] = distval(lp->thresh[HCM]);
 		vp->dist[RAD] = distval(lp->thresh[RAD]);
-#endif HOSED_CC
+#endif /* HOSED_CC */
 		}
 }

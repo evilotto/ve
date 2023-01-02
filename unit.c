@@ -249,7 +249,7 @@ locateunit(sx, sy, sflg)
 	char    army;
 	char    buf[BUFSIZ];
 
-	getline(buf, "Unit number: ", NOX);
+	ve_getline(buf, "Unit number: ", NOX);
 	if (*buf) {
 		army = buf[0];
 		if (army >= '0' && army <= '9')

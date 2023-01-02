@@ -1,15 +1,12 @@
 /* dump.c - dump all ve knows about world routines */
 
 # include	"ve.h"
-#ifdef VMS
-# include types.h
-#else
 # include	<sys/types.h>
-#endif
 
 void    prdate();
 void    revert();
 char   *splur();
+void dump_status(char *fmt, ...);
 /*
  *	dump - will dump out all the information about the known world
  *	into two files .dump and .map. These files should look as
@@ -21,21 +18,9 @@ FILE   *curfp;
 
 dump()
 {
-	extern void dump_status();
 /*	Empire 1.0 strongly urges the use of 'dump'.  'census' and
 	'commodity' are not up-to-date.  And 'dump' contains all
 	the info needed. */
-/*	if (divert(censusfile)) {
- *		dump_status("Dumping census to %s...", censusfile);
- *		cens();
- *		revert();
- *	}
- *	if (divert(commodityfile)) {
- *		dump_status("Dumping commodities to %s...", commodityfile);
- *		comm();
- *		revert();
- *	}
- */
 	curfp = stdout;
 	if (divert(mapfile)) {
 		dump_status("Dumping map to %s...", mapfile);
@@ -50,16 +35,13 @@ dump()
 	dump_status("...done");
 }
 
-/*VARARGS1*/
 void
-dump_status(va_alist)
-	va_dcl
+dump_status(char *fmt, ...)
 {
 	va_list ap;
-	char *fmt, buf[ 1024 ];
+	char buf[ 1024 ];
 
-	va_start(ap);
-	fmt = va_arg(ap, char *);
+	va_start(ap, fmt);
 	(void)uprintf(buf, fmt, &ap);
 	va_end(ap);
 	printAtBot(buf);
@@ -67,8 +49,7 @@ dump_status(va_alist)
 }
 
 int
-divert(name)
-	char   *name;
+divert(char *name)
 {
 	FILE   *fopen();
 
@@ -382,7 +363,7 @@ do_map()
 
 	fprintf(curfp, "%s\n", "map according to ve");
 
-	border(map_rel(min_x), map_rel(max_x) + 1, 1, "     ", "");
+	ve_border(map_rel(min_x), map_rel(max_x) + 1, 1, "     ", "");
 
 	for (cur_y = min_y; cur_y <= max_y; cur_y++) {
 		fprintf(curfp, "%4d ", map_rel(cur_y));
@@ -412,10 +393,10 @@ do_map()
 			fprintf(curfp, " ");
 		fprintf(curfp, "%-4d\n", map_rel(cur_y));
 	}
-	border(map_rel(min_x), map_rel(max_x) + 1, 1, "     ", "");
+	ve_border(map_rel(min_x), map_rel(max_x) + 1, 1, "     ", "");
 
 }
-border(xmin, xmax, inc, indent, sep)
+ve_border(xmin, xmax, inc, indent, sep)
 	int     xmin;
 	int     xmax;
 	int     inc;

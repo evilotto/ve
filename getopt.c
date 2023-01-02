@@ -1,4 +1,3 @@
-#include	<stdio.h>
 #include "ve.h"
 
 #define ERR(s, c)	if(opterr){\

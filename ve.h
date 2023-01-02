@@ -5,12 +5,16 @@
 #include <stdio.h>
 #include <curses.h>
 #include <signal.h>
-#include <varargs.h>
+#include <stdarg.h>
+#include <stdlib.h>
+#include <string.h>
+#include <malloc.h>
+#include <unistd.h>
 
 /* Things you may want to change */
-#define	VIPATH		"tpu"
-#define	SHPATH		"dcl"
-#define EXPATH          "edt"
+#define	VIPATH		"/usr/bin/vi"
+#define	SHPATH		"/bin/sh"
+#define EXPATH          "/usr/bin/ex"
 #define PROFILE		".ve-prof"
 #define VEOPTION	"VEPROFILE"
 #define SAVMAP		".map"
@@ -22,7 +26,7 @@
 
 #define MAXNOC      80			    /* Maximum number of
 					     * countries */
-#define	MAPSIZE	    196			    /* Empire world size */
+#define	MAPSIZE	    1024		    /* Empire world size */
 #define	RADARSIZE   80			    /* Radar scan size */
 #define	MAXUNITS    1024		    /* Maximum number of
 					     * units */
@@ -236,30 +240,13 @@ extern Ship *ships[];
 extern Plane *planes[];
 extern Item items[];
 
-extern char *rindex();
-extern char *index();
-extern char *strdup();
-extern char *strcpy();
-extern char *getenv();
-extern char *strcat();
-#ifndef VMS 
-extern char *sprintf();
-#endif
 extern Value *newval();
 extern Sector *newmap();
+extern Unit * newunit();
 extern Ship *newship();
 extern Plane *newplane();
 extern Level *newlev();
-extern char *calloc();
-/*VARARGS1*/
-extern void putline();
-/*VARARGS2*/
-extern void error();
-extern char *uprintf();
-extern void printAtBot();
-
-#ifdef VMS
-#define index(x,y) strchr(x,y)
-#define rindex(x,y) strrchr(x,y)
-#define fork() vfork()
-#endif
+extern void putline(char *fmt, ...);
+extern void error(int type, char *fmt, ...);
+extern char *uprintf(char *buf, char *fmt, ...);
+extern void printAtBot(char *buf);

@@ -1,12 +1,7 @@
 /* misc.c - miscellaneous routines */
 
 # include "ve.h"
-#ifdef hpux
-# include <sys/types.h>
-#endif
-#ifndef VMS
-# include <fcntl.h>
-#endif
+#include <errno.h>
 
 skipword(fp)
 	FILE   *fp;
@@ -78,19 +73,6 @@ bfindblank(addr)
 	return (addr);
 }					    /* findblank */
 
-char   *
-strdup(s)
-	char   *s;
-{
-	extern char *malloc();
-	extern char *strcpy();
-	auto char *p;
-
-	if ((p = malloc((unsigned) strlen(s) + 1)) == (char *) 0)
-		error(1, "Out of memmory in strdup <%d bytes needed>");
-	return strcpy(p, s);
-}
-
 void printAtBot(str)
      char *str;
 {
@@ -100,22 +82,13 @@ void printAtBot(str)
 }
 
 extern char *invo_name;
-/*VARARGS2*/
 void
-error(va_alist)
-	va_dcl
+error(int type, char *fmt, ...)
 {
 	va_list ap;
-	char *fmt, buf[ 1024 ];
-	int type;
+	char buf[ 1024 ];
 
-	extern int errno;
-	extern int sys_nerr;
-	extern char *sys_errlist[];
-
-	va_start(ap);
-	type = va_arg(ap, int);
-	fmt = va_arg(ap, char *);
+	va_start(ap, fmt);
 	(void)uprintf(buf, fmt, &ap);
 	va_end(ap);
 	if (incurses) {
@@ -125,10 +98,7 @@ error(va_alist)
 		return;
 	}
 	fprintf(stderr, "%s: %s", invo_name, buf);
-	if (errno > 0 && errno < sys_nerr)
-		fprintf(stderr, "[%s]\n", sys_errlist[errno]);
-	else
-		putc('\n', stderr);
+	fprintf(stderr, "[%s]\n", strerror(errno));
 	if (type)
 		exit(type);
 }
