@@ -1,0 +1,8 @@
+This is a hacked version of ve(6) which will work with the new Chainsaw 3.x
+code.  It will not work with versions before this!  I will get around to doing 
+that later.
+
+Thanks to Resvon ( Brett Reid ) for his help coding some sections.
+
+Don Harper
+duckland, fred, :-), god_dude

@@ -1,0 +1,323 @@
+/* ship.c - ship parsing and other shippy routines */
+
+# include	"ve.h"
+
+
+/*
+ * ship - Read and process ship reports.
+ */
+ship(fp)
+	FILE   *fp;
+{
+	char    des;
+	register int number;
+	register int i;
+	int     tx, ty;
+	Sector *mp;
+	Ship   *sp;
+	Value  *vp;
+	char    buf[BUFSIZ];
+
+	while (fgets(buf, sizeof buf, fp) != NULL) {
+		if (buf[26] != ',' || buf[3] == '#')
+			continue;
+		number = atoi(buf);
+		buf[26] = ':';		    /* So we don't process
+					     * this line again */
+
+		if ((i = locship(number)) == NOSHIPS) {
+			i = shipcount;
+			if (++shipcount >= MAXSHIPS) {
+				fputs("Ship vector overflow!\n", stderr);
+				(void) fflush(stderr);
+				exit(1);
+			}
+			sp = ships[i] = newship();
+		} else {
+			sp = ships[i];
+			if ((mp = map[xoffset(sp->x)][yoffset(sp->y)]) &&
+			    mp->shp != NOSHIPS)
+				mp->shp = NOSHIPS;
+		}
+
+		if (sp->number != number) {
+			strncpy(sp->type, &buf[5], 15);
+			sp->type[15] = '\0';
+			des = buf[5];
+			if (des > 'Z')
+				des -= ('a' - 'A');
+			sp->des = des;
+			sp->number = number;
+			sp->x = atoi(&buf[23]);
+			sp->y = atoi(&buf[27]);
+			sp->fleet = buf[32];
+		}
+		if (sp->vp == NULL) {
+			vp = sp->vp = newval();
+			vp->val[COU] = YOURS;
+			vp->val[EFF] = atoi(&buf[34]);
+		}
+		vp = sp->vp;
+		sscanf(&buf[41], "%hd%hd%hd%hd%hd%hd%hd%hd%hd%hd%hd",
+		       &vp->val[CIV], &vp->val[MIL], &vp->val[UW],
+		       &vp->val[FOOD], &vp->val[PL], &vp->val[HE], 
+		       &vp->val[XL], &vp->val[LN],
+		       &vp->val[MOB], &vp->val[FUEL], &vp->val[TECH]);
+		mp = map[tx = xoffset(sp->x)][ty = yoffset(sp->y)];
+		if (mp == NULL)
+			map[tx][ty] = mp = newmap();
+		if (mp->shp == NOSHIPS)
+			mp->shp = i;
+		if (mp->own == 0)
+			mp->own = 1;
+		/*
+		 * now guess that anything we don't know
+		 * about is sea
+		 */
+		tx = (sp->x);
+		ty = (sp->y);
+		maxxy(xoffset(tx + 2), yoffset(ty + 1));
+		maxxy(xoffset(tx - 2), yoffset(ty - 1));
+
+		merge('$', xoffset(tx + 1), yoffset(ty + 1), FALSE);
+		merge('$', xoffset(tx - 1), yoffset(ty + 1), FALSE);
+		merge('$', xoffset(tx + 2), yoffset(ty), FALSE);
+		merge('$', xoffset(tx), yoffset(ty), FALSE);
+		merge('$', xoffset(tx - 2), yoffset(ty), FALSE);
+		merge('$', xoffset(tx + 1), yoffset(ty - 1), FALSE);
+		merge('$', xoffset(tx - 1), yoffset(ty - 1), FALSE);
+	}
+}
+
+
+/*
+ * cargo - Read and process cargo reports.
+ */
+cargo(fp)
+	FILE   *fp;
+{
+	char    des;
+	register int number;
+	register int i;
+	int     tx, ty;
+	Sector *mp;
+	Ship   *sp;
+	Value  *vp;
+	char    buf[BUFSIZ];
+
+	while (fgets(buf, sizeof buf, fp) != NULL) {
+		if (buf[26] != ',' || buf[3] == '#')
+			continue;
+		number = atoi(buf);
+		buf[26] = ':';		    /* So we don't process
+					     * this line again */
+
+		if ((i = locship(number)) == NOSHIPS) {
+			i = shipcount;
+			if (++shipcount >= MAXSHIPS) {
+				fputs("Ship vector overflow!\n", stderr);
+				(void) fflush(stderr);
+				exit(1);
+			}
+			sp = ships[i] = newship();
+		} else {
+			sp = ships[i];
+			if ((mp = map[xoffset(sp->x)][yoffset(sp->y)]) &&
+			    mp->shp != NOSHIPS)
+				mp->shp = NOSHIPS;
+		}
+
+		if (sp->number != number) {
+			strncpy(sp->type, &buf[5], 15);
+			sp->type[15] = '\0';
+			des = buf[5];
+			if (des > 'Z')
+				des -= ('a' - 'A');
+			sp->des = des;
+			sp->number = number;
+			sp->x = atoi(&buf[22]);
+			sp->y = atoi(&buf[27]);
+			sp->fleet = buf[33];
+		}
+		if (sp->vp == NULL) {
+			vp = sp->vp = newval();
+			vp->val[COU] = YOURS;
+			vp->val[EFF] = atoi(&buf[35]);
+		}
+		vp = sp->vp;
+		sscanf(&buf[39], "%hd%hd%hd%hd%hd%hd%hd%hd%hd%hd",
+		       &vp->val[SH], &vp->val[GUN], &vp->val[PET],
+		       &vp->val[IRON], &vp->val[DUST], &vp->val[BAR],
+		       &vp->val[CRU], &vp->val[LCM], &vp->val[HCM],
+		       &vp->val[RAD]);
+		mp = map[tx = xoffset(sp->x)][ty = yoffset(sp->y)];
+		if (mp == NULL)
+			map[tx][ty] = mp = newmap();
+		if (mp->shp == NOSHIPS)
+			mp->shp = i;
+		if (mp->own == 0)
+			mp->own = 1;
+		/*
+		 * now guess that anything we don't know
+		 * about is sea
+		 */
+		tx = (sp->x);
+		ty = (sp->y);
+		maxxy(xoffset(tx + 2), yoffset(ty + 1));
+		maxxy(xoffset(tx - 2), yoffset(ty - 1));
+
+		merge('$', xoffset(tx + 1), yoffset(ty + 1), FALSE);
+		merge('$', xoffset(tx - 1), yoffset(ty + 1), FALSE);
+		merge('$', xoffset(tx + 2), yoffset(ty), FALSE);
+		merge('$', xoffset(tx), yoffset(ty), FALSE);
+		merge('$', xoffset(tx - 2), yoffset(ty), FALSE);
+		merge('$', xoffset(tx + 1), yoffset(ty - 1), FALSE);
+		merge('$', xoffset(tx - 1), yoffset(ty - 1), FALSE);
+
+	}
+}
+/*
+ * findship - Find ship or first ship of fleet.
+ */
+findship(theship, fleet)
+	register int theship;
+	register char fleet;
+{
+	register int i;
+
+	if (theship == UNKNOWN) {
+		for (i = 0; i < shipcount; i++)
+			if (ships[i]->fleet == fleet) {
+				theship = ships[i]->number;
+				break;
+			}
+	}
+	if (theship == UNKNOWN)
+		return (NOSHIPS);
+	return (locship(theship));
+}
+
+
+/*
+ * firstship - Locate first ship at x,y.
+ */
+firstship(x, y)
+	int     x, y;
+{
+	register int mx, my;
+	register int i;
+	Sector *mp;
+	Ship   *sp;
+
+	if (!shipmode)
+		return;
+	mx = xoffset(x);
+	my = yoffset(y);
+	mp = map[mx][my];
+	if (mp == NULL)
+		return;
+	if (mp->shp == NOSHIPS)
+		return;
+	for (i = 0; i < shipcount; i++) {
+		sp = ships[i];
+		if (xoffset(sp->x) == mx && yoffset(sp->y) == my) {
+			mp->shp = i;
+			return;
+		}
+	}
+}
+/*
+ * nextship - Advance ship index to next ship at x,y.
+ */
+nextship(x, y)
+	int     x, y;
+{
+	register int mx, my;
+	register int i;
+	Sector *mp;
+	Ship   *sp;
+
+	if (!shipmode)
+		return;
+	mx = xoffset(x);
+	my = yoffset(y);
+	mp = map[mx][my];
+	if (mp == NULL)
+		return;
+	if (mp->shp == NOSHIPS)
+		return;
+
+	for (i = mp->shp + 1; i < shipcount; i++) {
+		sp = ships[i];
+		if (xoffset(sp->x) == mx && yoffset(sp->y) == my) {
+			mp->shp = i;
+			return;
+		}
+	}
+
+	for (i = 0; i < mp->shp; i++) {
+		sp = ships[i];
+		if (xoffset(sp->x) == mx && yoffset(sp->y) == my) {
+			mp->shp = i;
+			return;
+		}
+	}
+}
+/*
+ * previousship - Back up to previous ship at x,y.
+ */
+previousship(x, y)
+	int     x, y;
+{
+	register int mx, my;
+	register int i;
+	Sector *mp;
+	Ship   *sp;
+
+	if (!shipmode)
+		return;
+	mx = xoffset(x);
+	my = yoffset(y);
+	mp = map[mx][my];
+	if (mp == NULL)
+		return;
+	if (mp->shp == NOSHIPS)
+		return;
+
+	for (i = mp->shp - 1; i >= 0; i--) {
+		sp = ships[i];
+		if (xoffset(sp->x) == mx && yoffset(sp->y) == my) {
+			mp->shp = i;
+			return;
+		}
+	}
+
+	for (i = shipcount - 1; i > mp->shp; i--) {
+		sp = ships[i];
+		if (xoffset(sp->x) == mx && yoffset(sp->y) == my) {
+			mp->shp = i;
+			return;
+		}
+	}
+}
+locship(n)
+	int     n;
+{
+	register int i;
+
+	for (i = 0; i < shipcount; i++)
+		if (ships[i]->number == n)
+			return i;
+	return NOSHIPS;
+}
+
+Ship   *
+newship()
+{
+	Ship   *sp;
+
+	if ((sp = (Ship *) calloc(1, sizeof(Ship))) == NULL)
+		error(1, "Out of memory in ship");
+	sp->number = UNKNOWN;
+	return sp;
+}

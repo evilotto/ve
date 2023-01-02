@@ -1,0 +1,594 @@
+
+
+
+     VVVVEEEE((((6666))))                       ((((00008888////00001111////88889999))))                      VVVVEEEE((((6666))))
+
+
+
+     NNNNAAAAMMMMEEEE
+          ve - visual empire
+
+     SSSSYYYYNNNNOOOOPPPPSSSSIIIISSSS
+          vvvveeee [ ----cccc ccccoooommmmmmmmaaaannnndddd____ffffiiiilllleeee ] [ ----aaaa ccccoooommmmmmmmaaaannnndddd ffffiiiilllleeee ] [ ----pppp pppprrrrooooffffiiiilllleeee ]
+          census map commodity spy radar ship cargo plane coastwatch
+          llookout unit lcargo lookout cutoff level satellite dump
+          resource sonar special ...
+
+     DDDDEEEESSSSCCCCRRRRIIIIPPPPTTTTIIIIOOOONNNN
+          _V_e is a screen oriented empire(6) tool to aid in decision
+          making and command file creation.  It has been used by
+          kings, presidents and petty dictators in many different
+          countries and worlds with varying degrees of success.  The
+          program runs independently of empire and can thus be used as
+          much and whenever you wish.
+
+          _V_e takes as input any number of empire commodity, census,
+          map, spy, ship, radar, coastwatch, cargo, lookout, cutoff,
+          level, satellite, unit, llookout, lcargo, dump and special
+          reports. _V_e combines the information and displays a map on
+          the screen and the census and commodity information for that
+          sector at the bottom.  As you move your cursor from one
+          sector to the next the information at the bottom is updated.
+          You can do surveys of the land, mark sectors and save
+          commands in a separate command file to be executed later in
+          empire.
+
+     OOOOPPPPTTTTIIIIOOOONNNNSSSS
+          If the -_a option is used the _c_o_m_m_a_n_d__f_i_l_e is appended to
+          whereas the -_c option will create or truncate the file.
+
+          The -_p specifies a different profile file.
+
+     CCCCOOOOMMMMMMMMAAAANNNNDDDDSSSS
+          Foreign country sectors are highlighted if the terminal
+          supports this.
+
+          The following are the commands that are understood (if not
+          quite executed) by _v_e.
+
+
+          q    Quit _v_e.
+
+          v    Give version number and authors.
+
+
+
+          Entering information:
+               Many commands in _v_e will prompt you for more
+               information at the bottom ("last line") of the screen.
+               The following characters have a special meaning when
+
+
+
+     Page 1                                          (printed 4/13/93)
+
+
+
+
+
+
+     VVVVEEEE((((6666))))                       ((((00008888////00001111////88889999))))                      VVVVEEEE((((6666))))
+
+
+
+               entering information.
+
+
+          BS   The backspace key will erase one character using a
+               backspace-space-backspace sequence.
+
+          @    The @ key will erase the entire line.
+
+          ESC  The ESCape key will move the cursor from the bottom
+               line to its current map position, wait a second and
+               then jump back.
+
+          .    The period will immediately expand to the x and y
+               coordinates of the current sector.  A `.' embedded into
+               macros will get expanded when the macro is.
+
+          ^P   Proposed movements may be traced on the screen and
+               allow you to verify moves and nav's by using the ^P
+               command.
+
+          backslash
+               The backslash, `\' will cause the next character to be
+               interpreted literally.  This is how `.'s are embedded
+               into macros and how one keeps a macro from expanding.
+
+          macros
+               Macros are a single character that will expand to a
+               string as soon as they are entered.  The commands to
+               set and delete macros are described below.
+
+
+
+          Movement and display functions:
+               The following commands control the movement of the
+               cursor on the screen and the printing of the status
+               lines and and display.
+
+          yugjbn
+               Move one sector in the specified direction.  These are
+               the same as in empire (up and left, up and right, left,
+               right, down and left, down and right respectively).
+
+          ^Y|^U
+               Move/scroll up.
+
+          ^B|^N
+               Move/scroll down.
+
+          ^G   Move/scroll left.
+
+          ^J   Move/scroll right.
+
+
+
+
+     Page 2                                          (printed 4/13/93)
+
+
+
+
+
+
+     VVVVEEEE((((6666))))                       ((((00008888////00001111////88889999))))                      VVVVEEEE((((6666))))
+
+
+
+          l    Leap to a specified sector.  _V_e will prompt for the x
+               and y coordinates of the sector.
+
+          P    Toggle the printing of the status lines at the bottom
+               of the screen (for slow baud rates).  Normally _v_e will
+               update the status lines every time the cursor is moved,
+               but with printing turned off, the status lines are only
+               printed by the `p' command below.
+
+          p    Print the status lines for that sector.  Only useful if
+               printing has been toggled off.
+
+          ^F   Flip between the survey map and the designation maps.
+
+          ^L   Redraw the screen.
+
+          ^R   Redraw the screen, centering it on the current
+               position.
+
+          D    Dump out the gathered data to a set of database files.
+               These are currently a map file, a census file & a
+               commodity file. These files can be automatically read
+               in and written out with the correct profile variables.
+               This enables a database to be kept of the current
+               empire status. The default files are listed at the end.
+
+
+          Marking the map:
+               The result of a `?' command is to mark sectors of the
+               map.  Sectors are marked using the _c_u_r_r_e_n_t _m_a_r_k
+               character. This can be changed without affecting the
+               screen allowing for multiple marks on the same screen.
+               A sector is marked by placing the current mark
+               character (default is `>') directly to the left of the
+               sector.  As an example of multiple marks, you can set
+               the current mark to `^' and do the command "?civ>100"
+               then set the mark to `v' and do "?civ<5" to get a
+               visual representation of the high and low civilian
+               population sectors.
+
+          m    Set the current mark character.
+
+          M    Reset the mark character to the default of `>'.
+
+          c    Clear the current marks on the screen.
+
+          C    Clear ALL of the marks on the screen.
+
+
+
+          Command file:
+               The optional command file can be used to store notes or
+
+
+
+     Page 3                                          (printed 4/13/93)
+
+
+
+
+
+
+     VVVVEEEE((((6666))))                       ((((00008888////00001111////88889999))))                      VVVVEEEE((((6666))))
+
+
+
+               commands to later be executed by empire.  _V_e lets you
+               append to the file, change or create it and edit it
+               without exiting the program.
+
+          a    Append a line to the command file.
+
+          o    Create or change the current command file.  If there is
+               a current command file it is closed before the new file
+               is opened.
+
+          O    The same as above, except it zero's the file first.
+
+          V    Invoke the default visual editor (normally _v_i(_1)) on
+               the current command file.  The shell variable VISUAL
+               will be used if set.
+
+          E    Invoke the default line editor (normally _e_x(_1)) on the
+               current command file.  The shell variable EDITOR will
+               be used if set.
+
+
+
+          _V_e Commands
+
+          ?    This command will prompt you for an expression similar
+               to that in empire (see Command Syntax in the empire
+               manual).  The effect of all `?' commands is to "mark"
+               sectors that satisfy the requirements of the command.
+               Unfortunately the command is not as robust as it is in
+               empire. In particular, the item name must be on the
+               left while the value is on the right.
+
+               Some allowed commands would be
+                    ?civ>100&mil<5
+                    ?country=4
+                    ?des=h&lcm<20
+                    ?dust     [equivalent to ?dust#0]
+               The items that can be accessed are:
+                    civ            civilians
+                    mil            military
+                    uw             uncompensated workers
+                    foo            food
+                    sh             shells
+                    gun            guns
+                    pet            refined oil
+                    iro            iron
+                    dus            gold dust
+                    bar            gold bars
+                    cru            crude oil
+                    lcm            light construction material
+                    hcm            heavy construction material
+                    rad            radioactive material
+
+
+
+     Page 4                                          (printed 4/13/93)
+
+
+
+
+
+
+     VVVVEEEE((((6666))))                       ((((00008888////00001111////88889999))))                      VVVVEEEE((((6666))))
+
+
+
+                    eff            efficiency
+                    mob            mobility
+                    min            mineral content
+                    gol            gold mineral content
+                    fer            fertility
+                    oil            oil content
+                    ura            uranium content
+                    wor            work percentage
+                    des            designation
+                    cou            country
+                    ter            territory
+                    ava            available work
+                    des            sector designation
+                    sde            secondary sector designation
+                    spe            special (see below)
+               Note that the above are the minimal abbreviations for
+               the different items.
+
+          I    The I command allows more report files to be read in.
+               This is useful when combined with the ! command to
+               update your empire and look at the results without ever
+               exiting _V_e.
+
+          !    The ! command forks a shell (honors the SHELL
+               variable).  The command file is flushed before forking
+               to allow its use.
+
+
+
+          Macros:
+               A macro is a single character that will be expanded
+               immediately as typed it does not need to be space
+               delimited.  A `.' may be embedded into a macro and will
+               be expanded at the time the macro is typed.  For
+               example, a C could be defined as "mov civ .".  Then
+               whenever a C is typed it would expand to "mov civ x,y"
+               where x,y are the coordinates of the current sector.
+
+          s    Set up a macro.
+
+          d    Delete a macro.
+
+
+
+          Surveys of the land
+               It is possible to survey any appropriate item on the
+               commodity or census list.  A survey has a _r_a_n_g_e
+               associated with it which describes the maximum value
+               for the item being surveyed.  When the survey is done
+               each sector is replaced by a single digit from 0 to 9
+               which indicates which tenth of the range the value of
+               that item occurred in.  For values greater than the
+
+
+
+     Page 5                                          (printed 4/13/93)
+
+
+
+
+
+
+     VVVVEEEE((((6666))))                       ((((00008888////00001111////88889999))))                      VVVVEEEE((((6666))))
+
+
+
+               range capital letters are used up to `Z'.  After that
+               only a `$' is printed.  The survey map is distinct from
+               the designation map.  You can flip between the two at
+               any time by typing `^F'.  For example, if the range is
+               100, the item being surveyed is civilians and the
+               number of civilians in the sector is 25, a 2 will be
+               displayed.
+
+          S    Perform a survey
+
+          R    Set up the range for surveys.
+
+
+
+          Naval reports
+               Normally, your opponents navies as well as your own
+               will not be displayed.  The ship display may be turned
+               on using the 'N' command.  At this point, the flagship
+               of each sector which contains a ship will be displayed
+               in the sector in which it resides.  Information about
+               each ship in a sector may be obtained by moving your
+               cursor over the top of the sector and paging through
+               each ship with the '+', '-', and '/' keys.
+
+          N    Toggles the ship display mode.
+
+          G    Go to the sector of the specified ship.  _V_e will prompt
+               for the ship number.
+
+
+
+          Unit reports
+               This works the same as naval reports, but with units.
+               The unit display may be turned on using the 'U'
+               command.  At this point, the lead unit of each army
+               will be displayed in the sector in which the unit
+               resides.  Information about each unit in a sector may
+               be obtained by moving your cursor over the top of the
+               sector and paging through each unit with the '+', '-',
+               and '/' keys.
+
+          U    Toggles the unit display mode.
+
+          B    Go to the sector of the specified unit.  _V_e will prompt
+               for the unit number.
+
+
+
+          Air Force reports
+               Air Force reports work much like naval reports, except
+               that the information is for planes instead of ships.
+               The plane display may be turned on using the 'A'
+
+
+
+     Page 6                                          (printed 4/13/93)
+
+
+
+
+
+
+     VVVVEEEE((((6666))))                       ((((00008888////00001111////88889999))))                      VVVVEEEE((((6666))))
+
+
+
+               command.  At this point, the lead plane of each flight
+               wing will be displayed in the sector in which the plane
+               resides.  Information about each plane in a sector may
+               be obtained by moving your cursor over the top of the
+               sector and paging through each plane with the '+', '-',
+               and '/' keys.
+
+          A    Toggles the plane display mode.
+
+          T    Go to the sector of the specified plane.  _V_e will
+               prompt for the plane number.
+
+          +    Display information on the next ship/plane in the
+               sector. Ships/planes are ordered by their ship/plane
+               number.
+
+          -    Display information on the previous ship/plane in the
+               sector.
+
+          /    Display information on the flagship/lead-plane in that
+               sector (ship/plane with the lowest number).
+
+
+
+          Moving along routes
+               You can walk along delivery routes by setting up the
+               desired route with the `r' command and then typing the
+               `w' command.  The cursor will then move along the
+               chosen delivery route.
+
+          r    Designate a current route.
+
+          w    Walk along the current route.
+
+          Levels and Cutoffs
+               Levels and cutoffs can be displayed per sector. There
+               is some dependency on which mode (aircraft/ship etc) is
+               in use at the time.
+
+          L    Toggles the level/cutoff display. This is a 3 stage
+               toggle that cycles through a display of commodities,
+               distribution thresholds and delivery cutoff values.
+               These are only displayed if there is data available.
+               Otherwise the commodities are shown.
+
+     PPPPRRRROOOOFFFFIIIILLLLEEEE
+          Certain options can be put in a profile file. The profile is
+          read each time _v_e starts up. The name of the profile
+          defaults to ._v_e-_p_r_o_f in your home directory. This can be
+          overridden by the environment variable _V_E_P_R_O_F_I_L_E or from the
+          command line with the -p switch.
+
+
+
+
+     Page 7                                          (printed 4/13/93)
+
+
+
+
+
+
+     VVVVEEEE((((6666))))                       ((((00008888////00001111////88889999))))                      VVVVEEEE((((6666))))
+
+
+
+          Currently the following options are supported - blank lines
+          and lines starting with a hash (#) are ignored.
+
+          mark Set the current mark variable to this value
+
+          macro
+               The next argument is a macro name (a single character)
+               and the remaining line is the macro.
+
+          mapfile
+
+          dumpfile
+               The default map and dump files used with autoload &
+               autosave.
+
+          autosave
+               Write out all the gathered data to the saved files on
+               quitting (if anything has changed).
+
+          autoload
+               Read in the above files when ve is started.
+
+     SSSSPPPPEEEECCCCIIIIAAAALLLL
+          It is possible to read in an additional, _s_p_e_c_i_a_l file,
+          containing special information of an arbitrary nature.  An
+          example of this might be the output of a program designed to
+          determine which sectors were most likely to develop plague.
+          The format of this file must be:
+               special
+               sector value
+                ...
+          For instance, a plague output script might look like the
+          following (giving plague likelihood in percentage):
+               special
+               -13,1   82
+                -1,3   53
+                 0,0   66
+                 2,2   29
+                 3,-5  44
+          The data for these values is put into the _s_p_e field of the
+          sector.  _s_p_e can be used in surveys or `?' queries.
+
+     AAAAUUUUTTTTHHHHOOOORRRRSSSS
+          Matthew Diaz and Michael Baldwin
+          Modifications by Bill Jones, Jim Knutson, Ken Montgomery,
+          Dan Reynolds
+          Modifications for 10/11/86 UCSD Export Version by Jeff
+          Wallace
+          Modifications (and many improvements) for UCB Release
+          Version by Julian Onions and Graeme Lunt.
+          Modifications for Empire 1.0 by Jeff Wallace
+          Bugs to jeffw@scam.Berkeley.EDU (UUCP:
+
+
+
+     Page 8                                          (printed 4/13/93)
+
+
+
+
+
+
+     VVVVEEEE((((6666))))                       ((((00008888////00001111////88889999))))                      VVVVEEEE((((6666))))
+
+
+
+          ...!ucbvax!scam!jeffw)
+
+     FFFFIIIILLLLEEEESSSS
+          ~/.ve-prof      user profile
+          .map  default file to write map data in
+          .dump  default file to write dump data in
+
+     SSSSEEEEEEEE AAAALLLLSSSSOOOO
+          empire(6)
+
+     BBBBUUUUGGGGSSSS
+          Probably lots
+
+          The `?' command should be identical to that in empire.
+
+          Some contortions of radar scans may not work.
+
+          Surveys with ships may leave survey values on the
+          designation map.
+
+          New ship or plane reports don't replace the old values (read
+          using the I command).
+
+          Command files that are removed in a forked shell will
+          reappear.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+     Page 9                                          (printed 4/13/93)
+
+
+
