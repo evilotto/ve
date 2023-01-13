@@ -58,7 +58,7 @@ ship(fp)
 			vp->val[EFF] = atoi(&buf[34]);
 		}
 		vp = sp->vp;
-		sscanf(&buf[41], "%hd%hd%hd%hd%hd%hd%hd%hd%hd%hd%hd",
+		sscanf(&buf[40], "%hd%hd%hd%hd%hd%hd%hd%hd%hd%hd%hd",
 		       &vp->val[CIV], &vp->val[MIL], &vp->val[UW],
 		       &vp->val[FOOD], &vp->val[PL], &vp->val[HE], 
 		       &vp->val[XL], &vp->val[LN],

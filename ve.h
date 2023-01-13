@@ -10,6 +10,7 @@
 #include <string.h>
 #include <malloc.h>
 #include <unistd.h>
+#include <sys/ttydefaults.h>
 
 /* Things you may want to change */
 #define	VIPATH		"/usr/bin/vi"
@@ -67,7 +68,7 @@
 #define distval(n) ((n) == 0 ? '.' : (n) < 1000 ? ((n)/100 + '0'): ((n)/1000 + 'a' - 1))
 
 #ifndef CTRL
-#define	CTRL(c)	    (('c')-0100)
+#define	CTRL(c)	    (c-0100)
 #endif
 
 /* Offsets into	sector arrays for various items	*/
@@ -250,3 +251,4 @@ extern void putline(char *fmt, ...);
 extern void error(int type, char *fmt, ...);
 extern char *uprintf(char *buf, char *fmt, ...);
 extern void printAtBot(char *buf);
+extern char processmove(char *bp, char **ip);

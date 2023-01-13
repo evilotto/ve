@@ -406,6 +406,38 @@ clearmks(all)
 				mp->mark = 0;
 }
 
+void
+showhelp()
+{
+	WINDOW *helpwin;
+
+	helpwin = newwin(20, 60, 2, 2);
+#define H(s) waddstr(helpwin, s)
+	H("+----------------------------------------------------------+");
+	H("| Movement   y u   Scroll    ^Y ^U     l - leap to sector  |");
+	H("|   keys    g   j   keys   ^G     ^J  ^L - redraw screen   |");
+	H("|            b n             ^B ^N    ^R - redraw + center |");
+	H("|                                                          |");
+	H("| P - toggle status line     p - print status line (if off)|");
+	H("| ^F - flip between survey and designation map             |");
+	H("| L - toggle level/cutoff   S - run survey R - survey range|");
+	H("| o - set command file       O - overwrite command file    |");
+	H("| a - append to command file V - edit command file         |");
+	H("|                                                          |");
+	H("| ? - mark sectors            m - set mark character       |");
+	H("| s - set macro               d - delete macro             |");
+	H("| N - naval mode  U - unit mode  A - air mode              |");
+	H("| G - goto ship   B - goto unit  T - goto plane            |");
+	H("| +/-// - display next/prev/lead ship/unit/plane           |");
+	H("|                                                          |");
+	H("| r - designate route         w - walk route               |");
+	H("+----------------------------------------------------------+");
+	H("<press a key>");
+#undef H
+
+	wgetch(helpwin);
+	delwin(helpwin);
+}
 
 /*
  * commands - Process input commands.
@@ -443,6 +475,10 @@ commands()
 		curx = x;
 		cury = y;
 		switch (c) {
+		case 'h':
+			showhelp();
+			mapdr(surmap);
+			break;
 			/* Movement commands */
 		case 'y':
 			x--;
@@ -472,13 +508,14 @@ commands()
 			x -= 2;
 			break;
 
+		/* scroll */
 		case 0x002:
-		case 0x00D:
+		case 0x00E:
 			y += 6;
 			break;
 
-		case 0x013:
-		case 0x00E:
+		case 0x015:
+		case 0x019:
 			y -= 6;
 			break;
 
@@ -486,13 +523,13 @@ commands()
 			x -= 6;
 			break;
 
-		case 0x009:
+		case 0x00A:
 			x += 6;
 			break;
 
-		case 0x004:
+		case 0x012:
 			center(curx, cury, TRUE);
-		case 0x00B:
+		case 0x00C:
 			clear();	    /* Redraw the screen */
 			refresh();
 			mapdr(surmap);
@@ -819,7 +856,6 @@ ve_getline(bp, pr, ex)
 	char   *mp;
 	char   *np;
 	char    nbuf[10];		    /* Number buffer */
-	char    processmove();
 	char   *ip = bp;
 
 	move(LINES - 1, 0);
@@ -885,7 +921,7 @@ ve_getline(bp, pr, ex)
 			wrefresh(curscr);
 			continue;
 
-		case 0x00F:
+		case CTRL('p'):
 			if (ex)
 				c = processmove(bp, &ip);
 			if (c > ' ')
@@ -893,7 +929,7 @@ ve_getline(bp, pr, ex)
 			continue;
 
 		case KEY_EOL:
-		case 0x15:
+		case CTRL('u'):
 		case '@':
 			move(LINES - 1, 0); /* erase the line */
 			if (*pr)
@@ -1219,6 +1255,17 @@ processmove(bp, ip)
 			x -= 2;
 			break;
 
+		case KEY_BACKSPACE:
+		case KEY_DC:
+		case '\b':
+			(*ip)--;
+			**ip = 0;
+			move(oldy, oldx);
+			addstr("\b \b");
+			oldx--;
+			getnewxy(bp, &x, &y);
+			updatescreen(x, y);
+			continue;
 
 		default:
 			updatescreen(curx, cury);

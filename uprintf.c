@@ -35,7 +35,8 @@
 
 #define MAXSPEC	256
 
-extern char *sprintf(), *strcat();
+#include <string.h>
+#include <stdio.h>
 
 /* Types */
 #define UPF_INT		0
