@@ -52,9 +52,8 @@ firstplane(x, y)
 /*
  * locateplane - Locate arbitrary plane and move display window.
  */
-locateplane(px, py, sflg)
-	register int *px, *py;
-	int     sflg;
+void
+locateplane(int *px, int *py, int sflg)
 {
 	register int number;
 	register int i;

@@ -196,6 +196,40 @@ findship(theship, fleet)
 		return (NOSHIPS);
 	return (locship(theship));
 }
+/*
+ * locateship - Locate arbitrary ship and move display window.
+ */
+void
+locateship(int *x, int *y, int sflg)
+{
+	register int number;
+	register int i;
+	char    fleet;
+	char    buf[BUFSIZ];
+
+	ve_getline(buf, "Ship number: ", NOX);
+	if (*buf) {
+		fleet = buf[0];
+		if (fleet >= '0' && fleet <= '9')
+			number = atoi(buf);
+		else
+			number = UNKNOWN;
+		if ((i = findship(number, fleet)) == NOPLANES) {
+			putline("No info on ship");
+			return;
+		}
+		*x = ships[i]->x;
+		*y = ships[i]->y;
+		center(*x, *y, FALSE);
+		map[xoffset(*x)][yoffset(*y)]->shp = i;
+		if (!shipmode) {
+			shipmode = TRUE;
+			mapdr(sflg);
+		}
+		censusinfo(*x, *y);
+		return;
+	}
+}
 
 
 /*

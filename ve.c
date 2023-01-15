@@ -592,7 +592,7 @@ commands()
 			break;
 
 		case 'G': /* Leap to ship */
-			locship(&x, &y, surmap);
+			locateship(&x, &y, surmap);
 			update++;
 			break;
 

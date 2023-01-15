@@ -239,9 +239,8 @@ firstunit(x, y)
 /*
  * locateunit - Locate arbitrary unit and move display window.
  */
-locateunit(sx, sy, sflg)
-	register int *sx, *sy;
-	int     sflg;
+void
+locateunit(int *sx, int *sy, int sflg)
 {
 
 	register int number;
