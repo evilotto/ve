@@ -490,6 +490,16 @@ commands()
 			y--;
 			break;
 
+		case KEY_UP:
+		if (x & 0x1 == 1) {
+				x++;
+			} else {
+				x--;
+			}
+			y--;
+			break;
+
+		case KEY_RIGHT:
 		case 'j':
 			x += 2;
 			break;
@@ -504,6 +514,16 @@ commands()
 			y++;
 			break;
 
+		case KEY_DOWN:
+			if (x & 0x1 == 1) {
+				x++;
+			} else {
+				x--;
+			}
+			y++;
+			break;
+
+		case KEY_LEFT:
 		case 'g':
 			x -= 2;
 			break;
