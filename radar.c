@@ -111,9 +111,9 @@ readradarlines(fp, xp, yp, rp)
 	static char format[] =
 #ifdef	BAROMETER
 	"%d,%d efficiency %*d%%, barometer at %*d, max range %f";
-#else	no BAROMETER
+#else
 	"%d,%d efficiency %*d%%, max range %f";
-#endif	no BAROMETER
+#endif
 
 	if (fscanf(fp, format, xp, yp, rp) != 3)
 		return (FALSE);

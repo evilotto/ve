@@ -131,10 +131,10 @@ findprofile()
 	if (profile_file)
 		return profile_file;
 
-	if ((p = getenv("HOME")) == NULL || *p == NULL)
+	if ((p = getenv("HOME")) == NULL || *p == '\0')
 		return NULL;
 
-	if ((q = getenv(VEOPTION)) == NULL || *p == NULL)
+	if ((q = getenv(VEOPTION)) == NULL || *p == '\0')
 		(void) sprintf(buf, "%s/%s", p, PROFILE);
 	else {
 		if (*p == '/')
