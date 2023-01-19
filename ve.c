@@ -286,6 +286,9 @@ main(argc, argv)
 	(void) signal(SIGQUIT, SIG_IGN);
 
 	(void) initscr();		    /* Start up curses etc. */
+	start_color();
+	use_default_colors();
+	init_pair(1, -1, COLOR_RED);
 	intrflush(stdscr, FALSE);
 	keypad(stdscr, TRUE);
 	incurses = TRUE;

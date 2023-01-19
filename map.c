@@ -81,6 +81,7 @@ mapdr(sflg)
 	register int tx, ty;
 	register char des;
 	register Sector *mp;
+	int color = 0;
 
 	for (y = starty, ty = yoffset(y);
 	     y <= starty + MLINES; y++, ty = (++ty) % MAPSIZE)
@@ -94,9 +95,24 @@ mapdr(sflg)
 				continue;
 			if      (unitmode && mp->unt != NOUNITS)
 				des = units[mp->unt]->des;
-			else if (shipmode && mp->shp != NOSHIPS)
+			else if (shipmode && mp->shp != NOSHIPS) {
+				int ship = mp->shp;
 				des = ships[mp->shp]->des;
-			else if (planemode && mp->pln != NOPLANES)
+				color = 1;
+				do {
+					if (ships[mp->shp]->vp != NULL) {
+						if (ships[mp->shp]->vp->val[COU] != YOURS) {
+							color = 1;
+							break;
+						} else {
+							color = 0;
+						}
+					}
+					nextship(x, y);
+				} while (mp->shp != ship);
+				mp->shp = ship;
+				if (ships[mp->shp]->vp == NULL) nextship(x, y);
+			} else if (planemode && mp->pln != NOPLANES)
 				des = planes[mp->pln]->des;
 			else if (sflg && mp->surv)
 				des = mp->surv;
@@ -105,11 +121,14 @@ mapdr(sflg)
 			mvaddch(y - starty, x - startx - 1,
 				(mp->mark) ? mp->mark : ' ');
 			if (des) {
+				if (color) attron(COLOR_PAIR(1));
 				if (mp->own == 2)
 					standout();
 				mvaddch(y - starty, x - startx, des);
 				if (mp->own == 2)
 					standend();
+				if (color) attroff(COLOR_PAIR(1));
 			}
+			color = 0;
 		}
 }
