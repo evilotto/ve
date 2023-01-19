@@ -1260,10 +1260,24 @@ processmove(bp, ip)
 			y--;
 			break;
 
+		case KEY_UP:
+			if (x & 0x1 == 1) {
+				x++;
+				c = 'u';
+			} else {
+				x--;
+				c = 'y';
+			}
+			y--;
+			break;
+
+		case KEY_RIGHT:
+			c = 'j';
+
 		case 'j':
 			x += 2;
 			break;
-
+			
 		case 'n':
 			x++;
 			y++;
@@ -1273,6 +1287,20 @@ processmove(bp, ip)
 			x--;
 			y++;
 			break;
+
+		case KEY_DOWN:
+			if (x & 0x1 == 1) {
+				x++;
+				c = 'n';
+			} else {
+				x--;
+				c = 'b';
+			}
+			y++;
+			break;
+
+		case KEY_LEFT:
+			c = 'g';
 
 		case 'g':
 			x -= 2;
