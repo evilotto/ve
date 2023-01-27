@@ -106,10 +106,10 @@ cargo(fp)
 	char    buf[BUFSIZ];
 
 	while (fgets(buf, sizeof buf, fp) != NULL) {
-		if (buf[26] != ',' || buf[3] == '#')
+		if (buf[14] != ',' || buf[3] == '#')
 			continue;
 		number = atoi(buf);
-		buf[26] = ':';		    /* So we don't process
+		buf[14] = ':';		    /* So we don't process
 					     * this line again */
 
 		if ((i = locship(number)) == NOSHIPS) {
@@ -128,21 +128,21 @@ cargo(fp)
 		}
 
 		if (sp->number != number) {
-			strncpy(sp->type, &buf[5], 15);
-			sp->type[15] = '\0';
+			strncpy(sp->type, &buf[5], 5);
+			sp->type[5] = '\0';
 			des = buf[5];
 			if (des > 'Z')
 				des -= ('a' - 'A');
 			sp->des = des;
 			sp->number = number;
-			sp->x = atoi(&buf[22]);
-			sp->y = atoi(&buf[27]);
-			sp->fleet = buf[33];
+			sp->x = atoi(&buf[11]);
+			sp->y = atoi(&buf[15]);
+			sp->fleet = buf[19];
 		}
 		if (sp->vp == NULL) {
 			vp = sp->vp = newval();
 			vp->val[COU] = YOURS;
-			vp->val[EFF] = atoi(&buf[35]);
+			vp->val[EFF] = atoi(&buf[22]);
 		}
 		vp = sp->vp;
 		sscanf(&buf[39], "%hd%hd%hd%hd%hd%hd%hd%hd%hd%hd",
