@@ -15,9 +15,6 @@
 
 # include	"ve.h"
 
-#ifdef ACCTNG
-char    acct[] = ACCTNG;
-#endif
 /* As of empire 1.0, census and commodity dumps have been removed.
    The 'dump' file contains all the needed info.  -- jeffw */
 char   *preload[] = {mapfile, dumpfile, 0};
@@ -220,11 +217,6 @@ main(argc, argv)
 	char   *argv[];
 {
 
-#ifdef ACCTNG
-	FILE   *actf;			    /* Accounting file */
-	long    sclock;
-	long    eclock;
-#endif
 	int     opt;
 	extern int optind;
 	extern char *optarg;
@@ -233,9 +225,6 @@ main(argc, argv)
 	invo_name = argv[0];
 	setbuf(stdout, _obuf);
 
-#ifdef ACCTNG
-	time(&sclock);
-#endif
 	while ((opt = getopt(argc, argv, "c:a:p:")) != EOF) {
 		switch (opt) {
 		case 'c':
@@ -299,20 +288,6 @@ main(argc, argv)
 	clrtoeol();
 	refresh();
 
-#ifdef ACCTNG
-	/* Save accounting information */
-	if ((actf = fopen(acct, "a")) != NULL) {
-		time(&eclock);
-		if (!getpw(getuid(), buf) && (bp = index(buf, ':')))
-			*bp = 0;
-		else
-			sprintf(buf, "%d", getuid());
-		eclock -= sclock;
-		fprintf(actf, "%s\t%2d:%02d\t%s", buf,
-			eclock / 60, eclock % 60, ctime(&sclock));
-		(void) fclose(actf);
-	}
-#endif
 	endtty();			    /* Reset terminal
 					     * characteristics */
 }

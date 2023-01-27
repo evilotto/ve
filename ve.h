@@ -122,14 +122,6 @@
 #define	VALUESIZE	45		    /* Number of values in
 					     * sector */
 
-/*
- * If you want accounting, change the filename below (make sure
- * it is 622 at	least).	 Everytime someone plays that version
- * a line will be entered showing login	name, elapsed time and
- * date.
- */
-
-/*# define	ACCTNG	"/tmp/ve-acct"*/
 typedef struct value {
 	short   val[VALUESIZE];		    /* Values as described
 					     * by items */
