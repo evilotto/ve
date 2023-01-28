@@ -203,8 +203,9 @@ censusinfo(x, y)
 				break;
 			case 1:
 				lp = mp->lp;
-				printw("%10.10s%4d,%-3d%4d%5d%4d%4d%4d%4d%5d%5d%4d%4d%4d%4d",
-				       lp->path, lp->dx, lp->dy,
+				printw("%10.10s%4d,%-3d%4d%4d%4d%5d%4d%4d%4d%5d%5d%4d%4d%4d%4d%4d",
+				       "", lp->dx, lp->dy,
+					   lp->thresh[CIV], lp->thresh[MIL],
 				       lp->thresh[UW], lp->thresh[FOOD],
 				       lp->thresh[SH], lp->thresh[GUN],
 				       lp->thresh[PET], lp->thresh[IRON],
@@ -319,7 +320,7 @@ censusheader(mode, lmode)
 			addstr("sh  gun  pet iron dust  bar  cru  lcm  hcm rad avail");
 			break;
 		case 1:		    /* distribution levels */
-			addstr("path------   dst    uw food");
+			addstr("path------   dst   civ mil  uw food");
 			addstr("  sh gun pet iron dust bar cru lcm hcm rad");
 			break;
 		case 2:		    /* delivery levels */

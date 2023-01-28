@@ -33,15 +33,18 @@ level(fp)
 		if (lp == NULL)
 			mp->lp = lp = newlev();
 		(void) strncpy(lp->path, &buf[10], 10);
-		lp->dx = atoi(&buf[21]);
-		lp->dy = atoi(&buf[25]);
-		sscanf(&buf[28], "%hd%hd%hd%hd%hd%hd%hd%hd%hd%hd%hd%hd",
+		lp->dx = atoi(&buf[10]);
+		lp->dy = atoi(&buf[14]);
+		sscanf(&buf[19], "%hd%hd%hd%hd%hd%hd%hd%hd%hd%hd%hd%hd%hd%hd",
+		       &lp->thresh[CIV], &lp->thresh[MIL],
 		       &lp->thresh[UW], &lp->thresh[FOOD],
 		       &lp->thresh[SH], &lp->thresh[GUN],
 		       &lp->thresh[PET], &lp->thresh[IRON],
 		       &lp->thresh[DUST], &lp->thresh[BAR],
 		       &lp->thresh[CRU], &lp->thresh[LCM],
 		       &lp->thresh[HCM], &lp->thresh[RAD]);
+		vp->dist[CIV] = distval(lp->thresh[CIV]);
+		vp->dist[MIL] = distval(lp->thresh[MIL]);
 		vp->dist[UW] = distval(lp->thresh[UW]);
 		vp->dist[FOOD] = distval(lp->thresh[FOOD]);
 		vp->dist[SH] = distval(lp->thresh[SH]);
