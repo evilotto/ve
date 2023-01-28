@@ -14,7 +14,7 @@
 | N - naval mode  U - unit mode  A - air mode              |
 | G - goto ship   B - goto unit  T - goto plane            |
 | +/-// - display next/prev/lead ship/unit/plane           |
-|                                                          |
+| 1..9 - highlight range  <BS> - clear highlight           |
 | r - designate route         w - walk route               |
 +----------------------------------------------------------+
 <press a key>

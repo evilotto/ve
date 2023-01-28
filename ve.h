@@ -119,6 +119,13 @@
 #define HE	44
 #define LN	45
 
+/* IFF values */
+#define IFF_NONE 0
+#define IFF_FRIEND 0x1
+#define IFF_ENEMY 0x2
+#define IFF_BOTH (IFF_FRIEND | IFF_ENEMY)
+ 
+
 #define	VALUESIZE	45		    /* Number of values in
 					     * sector */
 
@@ -136,6 +143,10 @@ typedef struct level {
 	short   thresh[DISTSIZE];
 	short   cutoff[DELSIZE];
 }       Level;
+
+typedef struct overlay {
+	short color;
+}		Overlay;
 /*
  * Map sector data structures
  */
@@ -227,7 +238,11 @@ extern char *macros[];
 extern char mapfile[], censusfile[], commodityfile[],dumpfile[];
 extern char *profile_file;
 
+extern int distance(int sx, int sy, int ex, int ey);
+extern int niff(int x, int y);
+
 extern Sector *map[MAPSIZE][MAPSIZE];
+extern Overlay *ovl[MAPSIZE][MAPSIZE];
 extern Unit *units[];
 extern Ship *ships[];
 extern Plane *planes[];
@@ -239,6 +254,9 @@ extern Unit * newunit();
 extern Ship *newship();
 extern Plane *newplane();
 extern Level *newlev();
+extern Overlay *newovl();
+extern void setovl(int x, int y, short color);
+extern void clearovl();
 extern void locateship(int *x, int *y, int flag);
 extern void locateunit(int *x, int *y, int flag);
 extern void locateplane(int *x, int *y, int flag);

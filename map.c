@@ -81,7 +81,7 @@ mapdr(sflg)
 	register int tx, ty;
 	register char des;
 	register Sector *mp;
-	int color = 0;
+	int hlcolor = 0;
 
 	for (y = starty, ty = yoffset(y);
 	     y <= starty + MLINES; y++, ty = (++ty) % MAPSIZE)
@@ -96,21 +96,7 @@ mapdr(sflg)
 			if      (unitmode && mp->unt != NOUNITS)
 				des = units[mp->unt]->des;
 			else if (shipmode && mp->shp != NOSHIPS) {
-				int ship = mp->shp;
 				des = ships[mp->shp]->des;
-				color = 1;
-				do {
-					if (ships[mp->shp]->vp != NULL) {
-						if (ships[mp->shp]->vp->val[COU] != YOURS) {
-							color = 1;
-							break;
-						} else {
-							color = 0;
-						}
-					}
-					nextship(x, y);
-				} while (mp->shp != ship);
-				mp->shp = ship;
 				if (ships[mp->shp]->vp == NULL) nextship(x, y);
 			} else if (planemode && mp->pln != NOPLANES)
 				des = planes[mp->pln]->des;
@@ -118,17 +104,117 @@ mapdr(sflg)
 				des = mp->surv;
 			else
 				des = mp->des;
+			if (ovl[tx][ty] != NULL) {
+				attron(ovl[tx][ty]->color);
+			}
 			mvaddch(y - starty, x - startx - 1,
 				(mp->mark) ? mp->mark : ' ');
+			if (shipmode) {
+				int iff = niff(x, y);
+				switch (iff) {
+					case IFF_ENEMY: hlcolor = COLOR_PAIR(1); break;
+					case IFF_FRIEND: hlcolor = COLOR_PAIR(2); break;
+					case IFF_BOTH: hlcolor = COLOR_PAIR(3); break;
+					default: hlcolor = 0;
+				}
+			}
 			if (des) {
-				if (color) attron(COLOR_PAIR(1));
+				if (hlcolor) attron(hlcolor);
 				if (mp->own == 2)
 					standout();
 				mvaddch(y - starty, x - startx, des);
 				if (mp->own == 2)
 					standend();
-				if (color) attroff(COLOR_PAIR(1));
+				if (hlcolor) attroff(hlcolor);
 			}
-			color = 0;
+			if (ovl[tx][ty] != NULL) {
+				attroff(ovl[tx][ty]->color);
+			}
+			hlcolor = 0;
 		}
 }
+
+/*
+ * distance - measure straight-line distance between two points
+ */
+int 
+distance(int sx, int sy, int ex, int ey)
+{
+	int dx = abs(ex-sx);
+	int dy = abs(ey-sy);
+	return (dy + max(0, (dx-dy)/2));
+}
+
+void 
+drawrange(int x, int y, int r)
+{
+	int mx, my;
+	for (mx = x-2*r; mx <= x+2*r; ++mx) {
+		for (my = y-2*r; my <= y+2*r; ++my) {
+			if (distance(x, y, mx, my) <= r) {
+				setovl(mx, my, COLOR_PAIR(4));
+			}
+		}
+	}
+}
+
+/*
+ * niff - naval identify friend-or-foe
+ * returns IFF_FRIEND, ENEMY, BOTH, NONE
+ */
+int 
+niff(int x, int y)
+{
+	int iff = IFF_NONE;
+	Sector *sp = map[xoffset(x)][yoffset(y)];
+	if (sp == NULL) return IFF_NONE;
+	int ship = sp->shp;
+	if (ship == NOSHIPS) return IFF_NONE;
+	do {
+		if (ships[sp->shp]->vp != NULL) {
+			if (ships[sp->shp]->vp->val[COU] == YOURS) {
+				iff |= IFF_FRIEND;
+			} else {
+				iff |= IFF_ENEMY;
+			}
+		}
+		nextship(x, y);
+	} while (sp->shp != ship);
+	return iff;
+}
+Overlay  *
+newovl()
+{
+	Overlay  *op;
+
+	op = (Overlay *) calloc(1, sizeof(*op));
+	if (op == NULL)
+		error(1, "Out of memory in newovl");
+	return op;
+}
+void
+setovl(int x, int y, short color)
+{
+	int tx = xoffset(x);
+	int ty = yoffset(y);
+	if (ovl[tx][ty] == NULL) {
+		ovl[tx][ty] = newovl();
+	}
+	ovl[tx][ty]->color = color;
+}
+void
+clearovl()
+{
+	int x, y;
+	for (x=0; x<MAPSIZE; ++x) {
+		for (y=0; y<MAPSIZE; ++y) {
+			if (ovl[x][y] != NULL) {
+				ovl[x][y]->color = 0;
+			}
+		}
+	}
+}
+
+
+
+

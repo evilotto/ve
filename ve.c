@@ -22,6 +22,7 @@
 char   *preload[] = {mapfile, dumpfile, 0};
 
 Sector *map[MAPSIZE][MAPSIZE];
+Overlay *ovl[MAPSIZE][MAPSIZE];
 
 Unit *units[MAXUNITS];
 
@@ -281,6 +282,10 @@ main(argc, argv)
 	start_color();
 	use_default_colors();
 	init_pair(1, -1, COLOR_RED);
+	init_pair(2, -1, COLOR_GREEN);
+	init_pair(3, -1, COLOR_YELLOW);
+	init_pair(4, COLOR_RED, -1);
+
 	intrflush(stdscr, FALSE);
 	keypad(stdscr, TRUE);
 	incurses = TRUE;
@@ -555,6 +560,18 @@ commands()
 			checkshiporplane(c, x, y);
 			/* Advance to next ship */
 			update++;
+			break;
+
+		case '1': case '2': case '3': case '4':
+		case '5': case '6': case '7': case '8':
+		case '9':
+			drawrange(x, y, c-'0');
+			mapdr(surmap);
+			break;
+
+		case KEY_BACKSPACE:
+			clearovl();
+			mapdr(surmap);
 			break;
 
 		case 'C':
