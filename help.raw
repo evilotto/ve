@@ -1,0 +1,20 @@
++----------------------------------------------------------+
+| Movement   y u   Scroll    ^Y ^U     l - leap to sector  |
+|   keys    g   j   keys   ^G     ^J  ^L - redraw screen   |
+|            b n             ^B ^N    ^R - redraw + center |
+|                                                          |
+| P - toggle status line     p - print status line (if off)|
+| ^F - flip between survey and designation map             |
+| L - toggle level/cutoff   S - run survey R - survey range|
+| o - set command file       O - overwrite command file    |
+| a - append to command file V - edit command file         |
+|                                                          |
+| ? - mark sectors            m - set mark character       |
+| s - set macro               d - delete macro             |
+| N - naval mode  U - unit mode  A - air mode              |
+| G - goto ship   B - goto unit  T - goto plane            |
+| +/-// - display next/prev/lead ship/unit/plane           |
+|                                                          |
+| r - designate route         w - walk route               |
++----------------------------------------------------------+
+<press a key>

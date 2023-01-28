@@ -1,6 +1,6 @@
 EXE = ve
-# CFLAGS = -g
-CFLAGS  = 
+CFLAGS = -g
+# CFLAGS  = 
 LDFLAGS = 
 LDLIBS	= -lncurses
 
@@ -24,7 +24,9 @@ OBJS	= 	census.o \
 		spy.o \
 		uprintf.o \
 		unit.o \
-		ve.o
+		ve.o \
+		screens.o \
+		$(END)
 
 SRCS	= 	census.c \
 		coastwatch.c \
@@ -45,9 +47,14 @@ SRCS	= 	census.c \
 		special.c \
 		spy.c \
 		uprintf.c \
-		ve.c
+		ve.c \
+		screens.c \
+		$(END)
+
 
 DIST	= README $(SRCS) ve.h Makefile ve.6
+
+SCREENS = help.raw 
 
 #################################################################
 #
@@ -78,5 +85,9 @@ co:
 # Dependencies
 #
 #################################################################
+
+screens.c: $(SCREENS)
+	awk -f screens.awk $^ > $@
+
 
 $(OBJS): ve.h

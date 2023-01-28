@@ -14,6 +14,8 @@
  */
 
 # include	"ve.h"
+#include <locale.h>
+#include "screens.h"
 
 /* As of empire 1.0, census and commodity dumps have been removed.
    The 'dump' file contains all the needed info.  -- jeffw */
@@ -274,6 +276,7 @@ main(argc, argv)
 	(void) signal(SIGINT, SIG_IGN);	    /* Ignore common signals */
 	(void) signal(SIGQUIT, SIG_IGN);
 
+	setlocale(LC_ALL, "");
 	(void) initscr();		    /* Start up curses etc. */
 	start_color();
 	use_default_colors();
@@ -388,31 +391,13 @@ void
 showhelp()
 {
 	WINDOW *helpwin;
+	int i = 0;
 
 	helpwin = newwin(20, 60, 2, 2);
-#define H(s) waddstr(helpwin, s)
-	H("+----------------------------------------------------------+");
-	H("| Movement   y u   Scroll    ^Y ^U     l - leap to sector  |");
-	H("|   keys    g   j   keys   ^G     ^J  ^L - redraw screen   |");
-	H("|            b n             ^B ^N    ^R - redraw + center |");
-	H("|                                                          |");
-	H("| P - toggle status line     p - print status line (if off)|");
-	H("| ^F - flip between survey and designation map             |");
-	H("| L - toggle level/cutoff   S - run survey R - survey range|");
-	H("| o - set command file       O - overwrite command file    |");
-	H("| a - append to command file V - edit command file         |");
-	H("|                                                          |");
-	H("| ? - mark sectors            m - set mark character       |");
-	H("| s - set macro               d - delete macro             |");
-	H("| N - naval mode  U - unit mode  A - air mode              |");
-	H("| G - goto ship   B - goto unit  T - goto plane            |");
-	H("| +/-// - display next/prev/lead ship/unit/plane           |");
-	H("|                                                          |");
-	H("| r - designate route         w - walk route               |");
-	H("+----------------------------------------------------------+");
-	H("<press a key>");
-#undef H
-
+	for (i=0; i < help_cnt; ++i) {
+		waddstr(helpwin, help[i]);
+	}
+	box(helpwin, 0,0);
 	wgetch(helpwin);
 	delwin(helpwin);
 }
@@ -786,6 +771,8 @@ commands()
 				update++;
 			}
 			break;
+		default:
+			beep();
 		}
 		x %= MAPSIZE;
 		y %= MAPSIZE;
