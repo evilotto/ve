@@ -68,6 +68,9 @@ clean: tidy
 tidy:
 	rm $(OBJS)
 
+tags: $(SRCS)
+	ctags ${SRCS}
+
 clobber: tidy
 	rm ve tags lint.out core a.out gmon.out
 
