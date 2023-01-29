@@ -28,10 +28,10 @@ unit(fp)
 	char    buf[BUFSIZ];
 
 	while (fgets(buf, sizeof buf, fp) != NULL) {
-		if (buf[28] != ',' || buf[3] == '#')
+		if (buf[25] != ',' || buf[3] == '#')
 			continue;
 		number = atoi(buf);
-		buf[28] = ':';		    /* So we don't process
+		buf[25] = ':';		    /* So we don't process
 					     * this line again */
 
 		if ((i = locunit(number)) == NOUNITS) {
@@ -57,21 +57,22 @@ unit(fp)
 				des -= ('a' - 'A');
 			up->des = des;
 			up->number = number;
-			up->x = atoi(&buf[24]);
-			up->y = atoi(&buf[29]);
-			up->army = buf[33];
+			up->x = atoi(&buf[22]);
+			up->y = atoi(&buf[26]);
+			up->army = buf[31];
 		}
 		if (up->vp == NULL) {
 			vp = up->vp = newval();
 			vp->val[COU] = YOURS;
-			vp->val[EFF] = atoi(&buf[35]);
+			vp->val[EFF] = atoi(&buf[34]);
 		}
 		vp = up->vp;
-		sscanf(&buf[40], "%hd%hd%hd%hd%hd",
+		sscanf(&buf[39], "%hd%hd%hd%hd%hd%hd",
+			   &vp->val[MIL],
 		       &vp->val[FORT], &vp->val[MOB], &vp->val[FOOD],
 		       &vp->val[FUEL], &vp->val[TECH]);
-		vp->val[RETR] = atoi(&buf[64]);
-		sscanf(&buf[68],"%hd%hd", &vp->val[RADIUS], &vp->val[XL]);
+		vp->val[RETR] = atoi(&buf[60]);
+		sscanf(&buf[64],"%hd%hd %4s", &vp->val[XL], &vp->val[LN], &up->carry);
 		mp = map[tx = xoffset(up->x)][ty = yoffset(up->y)];
 		if (mp == NULL)
 			map[tx][ty] = mp = newmap();

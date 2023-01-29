@@ -81,12 +81,12 @@ mapdr(sflg)
 	register int tx, ty;
 	register char des;
 	register Sector *mp;
-	int hlcolor = 0;
 
 	for (y = starty, ty = yoffset(y);
 	     y <= starty + MLINES; y++, ty = (++ty) % MAPSIZE)
 		for (x = startx, tx = xoffset(x);
 		     x <= startx + MCOLS; x++, tx = (++tx) % MAPSIZE) {
+			int hlcolor = 0;
 			mvaddch(y - starty, x - startx, ' ');
 			if (!VALID(x, y))
 				continue;
@@ -109,13 +109,20 @@ mapdr(sflg)
 			}
 			mvaddch(y - starty, x - startx - 1,
 				(mp->mark) ? mp->mark : ' ');
+			if (unitmode) {
+				int iff = liff(x, y);
+				switch (iff) {
+					case IFF_ENEMY: hlcolor = COLOR_PAIR(LCOLOR_ENEMY); break;
+					case IFF_FRIEND: hlcolor = COLOR_PAIR(LCOLOR_FRIEND); break;
+					case IFF_BOTH: hlcolor = COLOR_PAIR(LCOLOR_BOTH); break;
+				}
+			}
 			if (shipmode) {
 				int iff = niff(x, y);
 				switch (iff) {
-					case IFF_ENEMY: hlcolor = COLOR_PAIR(1); break;
-					case IFF_FRIEND: hlcolor = COLOR_PAIR(2); break;
-					case IFF_BOTH: hlcolor = COLOR_PAIR(3); break;
-					default: hlcolor = 0;
+					case IFF_ENEMY: hlcolor = COLOR_PAIR(NCOLOR_ENEMY); break;
+					case IFF_FRIEND: hlcolor = COLOR_PAIR(NCOLOR_FRIEND); break;
+					case IFF_BOTH: hlcolor = COLOR_PAIR(NCOLOR_BOTH); break;
 				}
 			}
 			if (des) {
@@ -180,6 +187,30 @@ niff(int x, int y)
 		}
 		nextship(x, y);
 	} while (sp->shp != ship);
+	return iff;
+}
+/*
+ * liff - land identify friend-or-foe
+ * returns IFF_FRIEND, ENEMY, BOTH, NONE
+ */
+int 
+liff(int x, int y)
+{
+	int iff = IFF_NONE;
+	Sector *sp = map[xoffset(x)][yoffset(y)];
+	if (sp == NULL) return IFF_NONE;
+	int land = sp->unt;
+	if (land == NOUNITS) return IFF_NONE;
+	do {
+		if (units[sp->unt]->vp != NULL) {
+			if (units[sp->unt]->vp->val[COU] == YOURS) {
+				iff |= IFF_FRIEND;
+			} else {
+				iff |= IFF_ENEMY;
+			}
+		}
+		nextunit(x, y);
+	} while (sp->unt != land);
 	return iff;
 }
 Overlay  *

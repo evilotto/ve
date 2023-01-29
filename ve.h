@@ -124,7 +124,17 @@
 #define IFF_FRIEND 0x1
 #define IFF_ENEMY 0x2
 #define IFF_BOTH (IFF_FRIEND | IFF_ENEMY)
+
+/* Colors */
+#define NCOLOR_ENEMY 1
+#define NCOLOR_FRIEND 2
+#define NCOLOR_BOTH 3
+
+#define LCOLOR_ENEMY 4
+#define LCOLOR_FRIEND 5
+#define LCOLOR_BOTH 6
  
+#define GCOLOR_RANGE 7
 
 #define	VALUESIZE	45		    /* Number of values in
 					     * sector */
@@ -172,6 +182,7 @@ typedef struct unitentry {
 	char    type[16];		    /* Unit type */
 	char    des;			    /* Unit designation */
 	char    army;			    /* Army designation */
+	char    carry[5];			/* carrying ship/plane */
 	short   number;			    /* Unit number */
 	short   x, y;			    /* Map coordinates of
 					     * unit */

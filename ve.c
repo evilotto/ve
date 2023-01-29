@@ -111,7 +111,7 @@ Funsw   fsw[] = {
 	"spy", spy,
 	"rad", radarscan,
 	"shi", ship,
-	"uni", unit,
+	"lan", unit,
 	"lca", lcargo,
 	"car", cargo,
 	"pla", plane,
@@ -281,10 +281,15 @@ main(argc, argv)
 	(void) initscr();		    /* Start up curses etc. */
 	start_color();
 	use_default_colors();
-	init_pair(1, -1, COLOR_RED);
-	init_pair(2, -1, COLOR_GREEN);
-	init_pair(3, -1, COLOR_YELLOW);
-	init_pair(4, COLOR_RED, -1);
+	init_pair(NCOLOR_ENEMY, -1, COLOR_RED);
+	init_pair(NCOLOR_FRIEND, -1, COLOR_BLUE);
+	init_pair(NCOLOR_BOTH, -1, COLOR_YELLOW);
+
+	init_pair(GCOLOR_RANGE, COLOR_RED, -1);
+
+	init_pair(LCOLOR_ENEMY, -1, COLOR_RED);
+	init_pair(LCOLOR_FRIEND, -1, COLOR_CYAN);
+	init_pair(LCOLOR_BOTH, -1, COLOR_MAGENTA);
 
 	intrflush(stdscr, FALSE);
 	keypad(stdscr, TRUE);

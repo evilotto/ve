@@ -144,7 +144,7 @@ censusinfo(x, y)
 				       vp->val[GOLD], vp->val[FERT],
 				       vp->val[OIL], vp->val[URAN],
 				       vp->val[WORK], vp->val[TERR]);
-		} else if (shipmode){
+		} else if (shipmode && mp->shp != NOSHIPS){
 			sp = ships[mp->shp];
 			printw("%4d  %-16.16s %3d,%-3d  %c  ",
 			       sp->number, sp->type, x, y, sp->fleet);
@@ -154,16 +154,16 @@ censusinfo(x, y)
 			       vp->val[CIV], vp->val[MIL], vp->val[UW],
 			       vp->val[FOOD], vp->val[PL], vp->val[MOB],
 			       vp->val[FUEL]);
-		} else if (unitmode){
+		} else if (unitmode && mp->unt != NOUNITS){
 			up = units[mp->unt];
-			printw("%4d  %-16.16s %3d,%-3d  %c  ",
-			       up->number, up->type, x, y, up->army);
+			printw("%4d %-13.13s %4s %3d,%-3d %c",
+			       up->number, up->type, up->carry, x, y, up->army);
 			if ((vp = up->vp) == NULL)
 				return;
-			printw("%5d%%%5d%5d%5d%5d%5d%5d%%%5d%5d", vp->val[EFF],
-			       vp->val[FORT],vp->val[MOB],vp->val[FOOD],
-			       vp->val[FUEL], vp->val[TECH], vp->val[RETR],
-			       vp->val[RADIUS],vp->val[XL]);
+			printw(" %3d%% %4d  %3d %3d %4d %4d %4d%% %3d %2d", vp->val[EFF],
+			       vp->val[MIL], vp->val[FORT],vp->val[MOB],
+				   vp->val[FOOD], vp->val[TECH], vp->val[RETR],
+			       vp->val[XL],vp->val[LN]);
 		}
 
 		move(LINES - 2, 0);
@@ -304,8 +304,8 @@ censusheader(mode, lmode)
 		addstr("eff   civ  mil   uw food  pln  mob  fuel");
 		break;
 	case 4:			    /* Unit (census) Report */
-		addstr("unit#  unit type         x,y   army  ");
-		addstr("eff   fort mob fuel food tech  retr  rad  xl");
+		addstr("unit# unit type    carry  x,y army ");
+		addstr("eff  mil fort mob food tech  retr  xl ln");
 		break;
 	}
 
