@@ -1,0 +1,73 @@
+\ colors from ncurses 
+0 constant COLOR_BLACK 1 constant COLOR_RED 
+2 constant COLOR_GREEN 3 constant COLOR_YELLOW
+4 constant COLOR_BLUE  5 constant COLOR_MAGENTA
+6 constant COLOR_CYAN  7 constant COLOR_WHITE
+
+-1 constant COLOR_NONE
+
+\ our colors
+\ naval colors
+1 constant NCOLOR_ENEMY
+2 constant NCOLOR_FRIEND
+3 constant NCOLOR_BOTH
+\ land unit colors
+4 constant LCOLOR_ENEMY
+5 constant LCOLOR_FRIEND
+6 constant LCOLOR_BOTH
+\ air units
+7 constant ACOLOR_ANY
+\ range overlay color
+8 constant GCOLOR_RANGE
+
+\ utils
+: nip swap drop ; 
+: 2>r r> -rot >r >r >r ;
+: 2r> r> r> r> rot >r ;
+: 3dup dup 2over rot ;
+: 3drop drop 2drop ;
+
+: x@ x @ ;   : y@ y @ ;
+: range ( x n -- x+n x-n ) 2dup + -rot - ;
+: yrange ( x y r -- x y r y+2r y-2r ) 2dup range ;
+: xrange ( x y r -- x y r x+2r x-2r ) 2 pick over range ;
+
+\ straight-line distance between points
+: dist ( x1 y1 x2 y2 -- n )
+  rot - abs ( x1 x2 dy )
+  -rot - abs ( dy dx )
+  over - 2 / 0 max + 
+;
+: xyr>xy ( x y r -- x y r x y ) 2 pick 2 pick ;
+
+\ do something for every sector in range
+: rad ( x y r -- )
+  3dup xrange do yrange do
+  xyr>xy i j dist over <
+  if i j NCOLOR_ENEMY setovl then
+  loop loop 
+;
+
+\ sector accessors
+: des@ ( sector -- des ) 3 + c@ ;
+
+"f" c@ constant fort-des
+
+variable fort-range
+3 fort-range !
+
+: forts
+  20 -20 do
+  20 -20 do
+  i j + 2 mod 0= if
+  i j load-sect
+  sector des@ fort-des = if i j fort-range @ rad then
+  then
+  loop
+  loop
+  ;
+
+: left x @ 2 - x ! ;
+65 ' left bind
+: bur 5 rad ; 
+66 ' bur bind
