@@ -16,6 +16,7 @@
 # include	"ve.h"
 #include <locale.h>
 #include "screens.h"
+#include "xtn.h"
 
 /* As of empire 1.0, census and commodity dumps have been removed.
    The 'dump' file contains all the needed info.  -- jeffw */
@@ -278,6 +279,8 @@ main(argc, argv)
 	(void) signal(SIGQUIT, SIG_IGN);
 
 	setlocale(LC_ALL, "");
+	xtn_init();
+	// ESCDELAY = 20;
 	(void) initscr();		    /* Start up curses etc. */
 	start_color();
 	use_default_colors();
@@ -397,8 +400,44 @@ clearmks(all)
 				mp->mark = 0;
 }
 
+void popup(int rows, int cols, int drows, const char **data)
+{
+	WINDOW *popup, *pbord;
+	bool showing = true;
+	int xoff=0, yoff=0, y;
+
+	pbord = newwin(rows+2, cols+2, 1, 1);
+	popup = derwin(pbord, rows, cols, 1, 1);
+	box(pbord, 0,0);
+	wrefresh(pbord);
+	while (showing) {
+		// wclear(popup);
+		for (y=0; y<rows && y<drows; y++) {
+			mvwaddstr(popup, y, 0, *(data+y+yoff));
+		}
+		wrefresh(popup);
+		switch (getch()) {
+			case KEY_UP: yoff--; break;
+			case KEY_DOWN: yoff++; break;
+			case 'q':
+			case '\x1b':
+			default:
+			    showing=false; break;
+		}
+		if (yoff>(drows-rows)) yoff=drows-rows;
+		if (yoff<0) yoff=0;
+	}
+	delwin(popup);
+	delwin(pbord);
+}
+
+void showhelp()
+{
+	popup(20, 60, help_cnt, help);
+}
+
 void
-showhelp()
+ori_showhelp()
 {
 	WINDOW *helpwin;
 	int i = 0;
@@ -447,6 +486,7 @@ commands()
 					     * for next command */
 		curx = x;
 		cury = y;
+		if (!xtn_execbind(c, &x, &y))
 		switch (c) {
 		case 'h':
 			showhelp();
@@ -793,6 +833,29 @@ commands()
 				update++;
 			}
 			break;
+		case ':':
+			ve_getline(buf, "> ", FALSE);
+			xtn_setxy(x, y);
+			if (xtn_eval(buf)) {
+				mapdr(surmap);
+			}
+			xtn_getxy(&x, &y);
+			break;
+		case 'H': {
+			const char **lines = calloc(sizeof(char *), shipcount+2);
+			int slines = 2;
+			char *buf = fmtships(&slines);
+			// int slines = shipcount+2;
+			int i;
+			for (i=0; i<slines; ++i) {
+				lines[i] = buf+(i*60);
+			}
+			popup(20, 60, slines, lines);
+			mapdr(surmap);
+			free(buf);
+			free(lines);
+			break;
+		}
 		default:
 			beep();
 		}
@@ -937,7 +1000,6 @@ ve_getline(bp, pr, ex)
 
 		case KEY_EOL:
 		case CTRL('u'):
-		case '@':
 			move(LINES - 1, 0); /* erase the line */
 			if (*pr)
 				addstr(pr);
@@ -1433,15 +1495,15 @@ updatescreen(x, y)
 xoffset(c)
 	register int c;
 {
-	c %= MAPSIZE;			    /* c in range +/-
+	c %= XMAPSIZE;			    /* c in range +/-
 					     * MAPSIZE */
 	if (c < 0)
-		c += MAPSIZE;		    /* c now in range 0 -
+		c += XMAPSIZE;		    /* c now in range 0 -
 					     * MAPSIZE */
-	c = (c + MAPSIZE / 2) % MAPSIZE;    /* c now in range 0 -
+	c = (c + XMAPSIZE / 2) % XMAPSIZE;    /* c now in range 0 -
 					     * MAPSIZE with 0,0 at
 					     * MAPSIZE/2 */
-	if (c < 0 || c >= MAPSIZE)	    /* safety - should
+	if (c < 0 || c >= XMAPSIZE)	    /* safety - should
 					     * "never happen" */
 		error(0, "Coordinate out of range %d", c);
 	return c;
@@ -1452,11 +1514,11 @@ xoffset(c)
 yoffset(c)
 	register int c;
 {
-	c %= MAPSIZE;
+	c %= YMAPSIZE;
 	if (c < 0)
-		c += MAPSIZE;
-	c = (c + MAPSIZE / 2) % MAPSIZE;
-	if (c < 0 || c >= MAPSIZE)
+		c += YMAPSIZE;
+	c = (c + YMAPSIZE / 2) % YMAPSIZE;
+	if (c < 0 || c >= YMAPSIZE)
 		error(0, "Coordinate out of range %d", c);
 	return c;
 }

@@ -1,6 +1,7 @@
 /* ship.c - ship parsing and other shippy routines */
 
 # include	"ve.h"
+#include <memory.h>
 
 
 /*
@@ -137,7 +138,7 @@ cargo(fp)
 			sp->number = number;
 			sp->x = atoi(&buf[11]);
 			sp->y = atoi(&buf[15]);
-			sp->fleet = buf[19];
+			sp->fleet = buf[20];
 		}
 		if (sp->vp == NULL) {
 			vp = sp->vp = newval();
@@ -355,3 +356,51 @@ newship()
 	sp->number = UNKNOWN;
 	return sp;
 }
+
+/*
+ * format the ship for 1-line display
+ */
+char *
+fmtship(Ship *s, char *buf)
+{
+	/* ship# type ---x,y--- flt %eff mob civ mil -uw gun -sh */
+	Value *vp = s->vp;
+	sprintf(buf, /* ship# */ "%5d "
+	             /* type  */ "%3s "
+				 /* x,y   */ "%4d,%-4d "
+				 /* flt   */ "%c  "
+				 /* %eff  */ "%%%-3d "
+				 /* mob   */ "%3d "
+				 /* civ   */ "%3d "
+				 /* mil   */ "%3d "
+				 /* -uw   */ "%3d "
+				 /* gun   */ "%3d "
+				 /* sh    */ "%3d ",
+				 s->number, s->type, s->x, s->y, s->fleet,
+				 vp->val[EFF], vp->val[MOB],
+				 vp->val[CIV], vp->val[MIL], vp->val[UW], 
+				 vp->val[GUN], vp->val[SH]);
+	return buf;
+}
+
+/*
+ * format all ships
+ */
+char *fmtships(int *rc)
+{
+	/* caller frees */
+	short n;
+	char *buf = calloc(60, shipcount+2);
+	/* ship# type ---x,y--- flt %eff mob civ mil -uw gun -sh */
+	strcpy(buf,        "ship# type    x,y    flt %eff mob civ mil  uw gun  sh");
+	strcpy(buf+(1*60), "----- ---- --------- --- ---- --- --- --- --- --- ---");
+
+	for (n=0; n<shipcount; ++n) {
+		if (ships[n]->number < 0) continue;
+		if (ships[n]->vp->val[COU] != YOURS) continue;
+		fmtship(ships[n], buf+((*rc)*60));
+		++*rc;
+	}
+	return buf;
+}
+

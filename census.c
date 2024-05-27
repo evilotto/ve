@@ -123,15 +123,15 @@ censusinfo(x, y)
 	clrtoeol();
 	move(LINES - 4, 0);
 	clrtoeol();
+#define WRAP(n, r) (((n + r/2) % r + r) % r - r/2)
 	if (!mp || !(mp->own)) {
-		printw("%4d,%-4d", x, y);
+		printw("%4d,%-4d", WRAP(x, XMAPSIZE), WRAP(y, YMAPSIZE));
 		return;
 	}
-
 	if (mp->own) {
 		if ((!shipmode || mp->shp == NOSHIPS)
 		 && (!unitmode || mp->unt == NOUNITS)) {
-			printw("%3d,%-4d%c%c", x, y, mp->des ? mp->des : ' ',
+			printw("%3d,%-4d%c%c", WRAP(x, XMAPSIZE), WRAP(y, YMAPSIZE), mp->des ? mp->des : ' ',
 			       mp->sdes ? mp->sdes : ' ');
 			if ((vp = mp->vp) != NULL)
 				printw("%4d%%%4d %c%c %c%c %c%5d%5d%5d%5d%4d%5d%5d%4d%5d%4d%%%3d",
@@ -147,7 +147,7 @@ censusinfo(x, y)
 		} else if (shipmode && mp->shp != NOSHIPS){
 			sp = ships[mp->shp];
 			printw("%4d  %-16.16s %3d,%-3d  %c  ",
-			       sp->number, sp->type, x, y, sp->fleet);
+			       sp->number, sp->type, WRAP(x, XMAPSIZE), WRAP(y, YMAPSIZE), sp->fleet);
 			if ((vp = sp->vp) == NULL)
 				return;
 			printw("%5d%%%5d%5d%5d%5d%5d%5d%6d", vp->val[EFF],
@@ -157,7 +157,7 @@ censusinfo(x, y)
 		} else if (unitmode && mp->unt != NOUNITS){
 			up = units[mp->unt];
 			printw("%4d %-13.13s %4s %3d,%-3d %c",
-			       up->number, up->type, up->carry, x, y, up->army);
+			       up->number, up->type, up->carry, WRAP(x, XMAPSIZE), WRAP(y, YMAPSIZE), up->army);
 			if ((vp = up->vp) == NULL)
 				return;
 			printw(" %3d%% %4d  %3d %3d %4d %4d %4d%% %3d %2d", vp->val[EFF],
@@ -281,7 +281,7 @@ censusinfo(x, y)
 	}
 }
 /*
- * censusheader - Display census header.
+	 * censusheader - Display census header.
  */
 censusheader(mode, lmode)
 	register int mode, lmode;

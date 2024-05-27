@@ -78,15 +78,13 @@ mapdr(sflg)
 	register int sflg;
 {
 	register int x, y;
-	register int tx, ty;
 	register char des;
 	register Sector *mp;
 
-	for (y = starty, ty = yoffset(y);
-	     y <= starty + MLINES; y++, ty = (++ty) % MAPSIZE)
-		for (x = startx, tx = xoffset(x);
-		     x <= startx + MCOLS; x++, tx = (++tx) % MAPSIZE) {
+	for (y = starty; y <= starty + MLINES; y++)
+		for (x = startx; x <= startx + MCOLS; x++) {
 			int hlcolor = 0;
+			int ty = yoffset(y), tx = xoffset(x);
 			mvaddch(y - starty, x - startx, ' ');
 			if (!VALID(x, y))
 				continue;
@@ -159,7 +157,7 @@ drawrange(int x, int y, int r)
 	for (mx = x-2*r; mx <= x+2*r; ++mx) {
 		for (my = y-2*r; my <= y+2*r; ++my) {
 			if (distance(x, y, mx, my) <= r) {
-				setovl(mx, my, COLOR_PAIR(4));
+				setovl(mx, my, COLOR_PAIR(GCOLOR_RANGE));
 			}
 		}
 	}

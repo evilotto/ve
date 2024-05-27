@@ -49,8 +49,30 @@ SRCS	= 	census.c \
 		uprintf.c \
 		ve.c \
 		screens.c \
+		xtn-atlast.c \
+		xtn-ficl.c \
 		$(END)
 
+XTN = FICL
+default: ve
+
+### ATLAST 
+ifeq ($(XTN),ATLAST)
+ATLAST_SRC = atlast/atlast-64/atlast.c
+ATL_FLAGS = -Iatlast/atlast-64/ -DEXPORT -DREADONLYSTRINGS
+CFLAGS += ${ATL_FLAGS}
+OBJS += xtn-atlast.o 
+LDLIBS += -lm atlast/atlast-64/atlast.o 
+${ATLAST_SRC}:
+	git clone https://github.com/Fourmilab/atlast.git
+else ifeq ($(XTN),FICL)
+
+### ficl
+CFLAGS += -Ificl/
+LDFLAGS = -Lficl
+LDLIBS += -lm -lficl
+OBJS += xtn-ficl.o 
+endif
 
 DIST	= README $(SRCS) ve.h Makefile ve.6
 
@@ -68,8 +90,8 @@ clean: tidy
 tidy:
 	rm $(OBJS)
 
-tags: $(SRCS)
-	ctags ${SRCS}
+tags: $(SRCS) ve.h
+	ctags ${SRCS} ve.h 
 
 clobber: tidy
 	rm ve tags lint.out core a.out gmon.out

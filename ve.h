@@ -28,6 +28,8 @@
 #define MAXNOC      80			    /* Maximum number of
 					     * countries */
 #define	MAPSIZE	    1024		    /* Empire world size */
+#define	XMAPSIZE	140		    /* Empire X world size */
+#define	YMAPSIZE	68		    /* Empire Y world size */
 #define	RADARSIZE   80			    /* Radar scan size */
 #define	MAXUNITS    1024		    /* Maximum number of
 					     * units */
@@ -133,8 +135,10 @@
 #define LCOLOR_ENEMY 4
 #define LCOLOR_FRIEND 5
 #define LCOLOR_BOTH 6
+
+#define ACOLOR_ANY 7
  
-#define GCOLOR_RANGE 7
+#define GCOLOR_RANGE 8
 
 #define	VALUESIZE	45		    /* Number of values in
 					     * sector */
@@ -276,3 +280,4 @@ extern void error(int type, char *fmt, ...);
 extern char *uprintf(char *buf, char *fmt, ...);
 extern void printAtBot(char *buf);
 extern char processmove(char *bp, char **ip);
+extern char *fmtships();
