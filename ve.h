@@ -228,6 +228,23 @@ typedef struct funsw {			    /* list of prefixes and
 	char   *type;
 	int     (*func) ();
 }       Funsw;
+
+/* select list */
+typedef struct Sitem {
+    char *key;
+	char *val;
+} Sitem;
+typedef struct Slist {
+	int n;
+	Sitem **entries;
+} Slist;
+
+Slist *mkslist();
+void slist_add(Slist* s, const char *k, const char *v);
+void slist_free(Slist *s);
+Sitem *slist_item(const Slist *s, int n);
+
+
 /* externals */
 extern int chainsaw;
 extern int noise;
@@ -281,3 +298,4 @@ extern char *uprintf(char *buf, char *fmt, ...);
 extern void printAtBot(char *buf);
 extern char processmove(char *bp, char **ip);
 extern char *fmtships();
+extern Slist *getships();

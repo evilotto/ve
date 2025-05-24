@@ -400,6 +400,46 @@ clearmks(all)
 				mp->mark = 0;
 }
 
+/*
+ * display a selection list in a popup
+ * return the selected item
+ */
+
+char *popsel(int rows, int cols, const Slist *data)
+{
+	WINDOW *popup, *pbord;
+	bool showing = true;
+	int xoff=0, yoff=0, y;
+	int crow=0, trow=0;
+
+	pbord = newwin(rows+2, cols+2, 1, 1);
+	popup = derwin(pbord, rows, cols, 1, 1);
+	box(pbord, 0,0);
+	wrefresh(pbord);
+	while (showing) {
+		for (y=0; y<data->n; y++) {
+			char *t = slist_item(data, y)->val;
+			int l = cols - strlen(t);
+			wstandout(popup);
+			mvwaddstr(popup, y, 0, t);
+			for(;l>0; --l) waddch(popup, ' ');
+			wstandend(popup);
+		}
+		wrefresh(popup);
+		switch (getch()) {
+			case KEY_UP: yoff--; break;
+			case KEY_DOWN: yoff++; break;
+			case 'q':
+			case '\x1b':
+			default:
+			    showing=false; break;
+		}
+	}
+	delwin(popup);
+	delwin(pbord);
+	return 0;
+}
+
 void popup(int rows, int cols, int drows, const char **data)
 {
 	WINDOW *popup, *pbord;
@@ -842,18 +882,10 @@ commands()
 			xtn_getxy(&x, &y);
 			break;
 		case 'H': {
-			const char **lines = calloc(sizeof(char *), shipcount+2);
-			int slines = 2;
-			char *buf = fmtships(&slines);
-			// int slines = shipcount+2;
-			int i;
-			for (i=0; i<slines; ++i) {
-				lines[i] = buf+(i*60);
-			}
-			popup(20, 60, slines, lines);
+			Slist *s = getships();
+			popsel(20, 60, s);
 			mapdr(surmap);
-			free(buf);
-			free(lines);
+			slist_free(s);
 			break;
 		}
 		default:

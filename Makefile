@@ -26,6 +26,7 @@ OBJS	= 	census.o \
 		unit.o \
 		ve.o \
 		screens.o \
+		slist.o \
 		$(END)
 
 SRCS	= 	census.c \
@@ -51,6 +52,7 @@ SRCS	= 	census.c \
 		screens.c \
 		xtn-atlast.c \
 		xtn-ficl.c \
+		slist.c \
 		$(END)
 
 XTN = FICL

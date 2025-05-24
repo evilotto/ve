@@ -404,3 +404,44 @@ char *fmtships(int *rc)
 	return buf;
 }
 
+Slist *getships()
+{
+	/* caller frees */
+	short n;
+	Slist *s = mkslist();
+	char *buf = calloc(60, shipcount+2);
+	/* ship# type ---x,y--- flt %eff mob civ mil -uw gun -sh */
+	slist_add(s, NULL, "ship# type    x,y    flt %eff mob civ mil  uw gun  sh");
+	slist_add(s, NULL, "----- ---- --------- --- ---- --- --- --- --- --- ---");
+
+	for (n=0; n<shipcount; ++n) {
+		char buf[60], nbuf[5];
+		if (ships[n]->number < 0) continue;
+		if (ships[n]->vp->val[COU] != YOURS) continue;
+		fmtship(ships[n], buf);
+		sprintf(nbuf, "%d", n);
+		slist_add(s, nbuf, buf);
+	}
+	return s;
+}
+
+/*
+ * create a selection list for ships
+ */
+char *shipsel(int *rc)
+{
+	/* caller frees */
+	short n;
+	char *buf = calloc(60, shipcount+2);
+	/* ship# type ---x,y--- flt %eff mob civ mil -uw gun -sh */
+	strcpy(buf,        "ship# type    x,y    flt %eff mob civ mil  uw gun  sh");
+	strcpy(buf+(1*60), "----- ---- --------- --- ---- --- --- --- --- --- ---");
+
+	for (n=0; n<shipcount; ++n) {
+		if (ships[n]->number < 0) continue;
+		if (ships[n]->vp->val[COU] != YOURS) continue;
+		fmtship(ships[n], buf+((*rc)*60));
+		++*rc;
+	}
+	return buf;
+}
