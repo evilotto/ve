@@ -30,6 +30,8 @@ Lookup  prof_tbl[] = {
 	"dumpfile", PROF_DUMPFILE,
 	0, 0
 };
+int lookup(char *str, char **ptr);
+void
 profile()
 {
 	char   *p;
@@ -101,7 +103,7 @@ profile()
 
 
 
-int 
+int
 lookup(str, ptr)
 	char   *str, **ptr;
 {

@@ -15,6 +15,7 @@
 
 # include	"ve.h"
 #include <locale.h>
+#include <sys/wait.h>
 #include "screens.h"
 #include "xtn.h"
 
@@ -216,9 +217,9 @@ load_file(name, quiet)
 			(*fp->func) (inpf);
 	(void) fclose(inpf);
 }
-main(argc, argv)
-	int     argc;
-	char   *argv[];
+
+int
+main(int argc, char *argv[])
 {
 
 	int     opt;
@@ -251,9 +252,9 @@ main(argc, argv)
 	 * Process empire report files.  This is done by
 	 * looking at the second line of the file which
 	 * contains a string of the form:
-	 * 
+	 *
 	 * cen ... (e.g. cen # >cen.out)
-	 * 
+	 *
 	 * The first word indicates the type of file it is
 	 * (census, map, etc).
 	 */
@@ -314,6 +315,7 @@ main(argc, argv)
  * flg indicates wether to make subtle changes to '^' & '-' if got
  * from census reports.
  */
+char
 merge(uc, x, y, flg)
 	register char uc;
 	register int x, y;
@@ -370,6 +372,7 @@ merge(uc, x, y, flg)
  * center - Center display window about (x,y).
  * flag forces centering otherwise only centre if we want to.
  */
+void
 center(x, y, flag)
 	register int x, y;
 	int     flag;
@@ -386,6 +389,7 @@ center(x, y, flag)
  * clearmks - Clear sector marks.  If 'all' flag is set, then ALL marks
  *            cleared, otherwise just curmark marks are cleared.
  */
+void
 clearmks(all)
 	int     all;
 {
@@ -494,6 +498,7 @@ ori_showhelp()
 /*
  * commands - Process input commands.
  */
+void
 commands()
 {
 	register int c;
@@ -919,6 +924,7 @@ commands()
 /*
  * endtty - Restore terminal to normal mode.
  */
+void
 endtty()
 {
 	endwin();
@@ -930,6 +936,7 @@ endtty()
  * getac - Get a character. Return peekc if non-zero,
  *         otherwise read a character from the keyboard.
  */
+int
 getac()
 {
 	register char tc;
@@ -948,6 +955,7 @@ getac()
  *           using pr as a prompt if non-zero. If ex is set,
  *           then expand macros.
  */
+void
 ve_getline(bp, pr, ex)
 	char   *bp;
 	char   *pr;
@@ -1049,6 +1057,7 @@ ve_getline(bp, pr, ex)
 /*
  * getnewxy - Get last postion of MOVE or NAV command.
  */
+int
 getnewxy(bp, x, y)
 	char   *bp;
 	int    *x, *y;
@@ -1067,7 +1076,7 @@ getnewxy(bp, x, y)
 	switch (*ip) {
 	case 'm':
 	case 'e':
-		if ((strncmp(ip, "mov", 3) != 0) && 
+		if ((strncmp(ip, "mov", 3) != 0) &&
 		    (strncmp(ip, "exp", 3) != 0))
 			return (0);
 		if (*(ip = findblank(ip)) == 0)
@@ -1189,6 +1198,7 @@ getnewxy(bp, x, y)
 /*
  * mark - Mark map according to command.
  */
+void
 mark(sp, pass)
 	char   *sp;
 	int     pass;
@@ -1304,6 +1314,7 @@ mark(sp, pass)
 /*
  * presetty - Set up terminal for display mode.
  */
+void
 presetty()
 {
 	cbreak();
@@ -1313,7 +1324,7 @@ presetty()
 /*
  * processmove - process MOVE or NAV command.
  */
-char 
+char
 processmove(bp, ip)
 	char   *bp;
 	char  **ip;
@@ -1436,6 +1447,7 @@ putline(char *fmt, ...)
 /*
  * query - Parse ? command.
  */
+void
 query()
 {
 	register int pass = 0;
@@ -1462,6 +1474,7 @@ query()
 /*
  * survey - Display survey info for a given item.
  */
+void
 survey(sp)
 	char   *sp;
 {
@@ -1499,6 +1512,7 @@ survey(sp)
 /*
  * updatescreen - Update screen if display window moved.
  */
+void
 updatescreen(x, y)
 	register int x, y;
 {
@@ -1524,6 +1538,7 @@ updatescreen(x, y)
  * xoffset - Return transformed xcoordinate. Eventually, should be able
  * to work with different x & y map sizes.
  */
+int
 xoffset(c)
 	register int c;
 {
@@ -1543,6 +1558,7 @@ xoffset(c)
 /*
  * yoffset - Return transformed ycoordinate.
  */
+int
 yoffset(c)
 	register int c;
 {
@@ -1587,6 +1603,7 @@ newmap()
  * checkshiporplane - Determines whether ships or planes are at the
  *		      present location.
  */
+void
 checkshiporplane(c, x, y)
 	char    c;
 	int     x, y;
@@ -1653,6 +1670,7 @@ checkshiporplane(c, x, y)
 /*
  * version Print version of ve
  */
+void
 version()
 {
 	move(LINES - 1, 0);
@@ -1661,6 +1679,7 @@ version()
 	printw(" May, 26, 1992");
 	printw("    This version is setup for Empire 1.0");
 }
+void
 maxxy(x, y)
 	int     x, y;
 {

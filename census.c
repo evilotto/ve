@@ -16,6 +16,7 @@
 /*
  * census - Read and process census file.
  */
+void
 census(fp)
 	FILE   *fp;
 {
@@ -87,6 +88,7 @@ census(fp)
 /*
  * censusinfo - Display census and commodities info for sector.
  */
+void
 censusinfo(x, y)
 	register int x, y;
 {
@@ -283,6 +285,7 @@ censusinfo(x, y)
 /*
 	 * censusheader - Display census header.
  */
+void
 censusheader(mode, lmode)
 	register int mode, lmode;
 {

@@ -7,6 +7,7 @@
  *           try to figure out where you are on the map by looking at the
  *           coordinates along the edge of the map.
  */
+void
 readmap(fp)
 	FILE   *fp;
 {
@@ -74,8 +75,8 @@ readmap(fp)
 /*
  * mapdr - Display map.
  */
-mapdr(sflg)
-	register int sflg;
+void
+mapdr(int sflg)
 {
 	register int x, y;
 	register char des;
@@ -142,7 +143,7 @@ mapdr(sflg)
 /*
  * distance - measure straight-line distance between two points
  */
-int 
+int
 distance(int sx, int sy, int ex, int ey)
 {
 	int dx = abs(ex-sx);
@@ -150,7 +151,7 @@ distance(int sx, int sy, int ex, int ey)
 	return (dy + max(0, (dx-dy)/2));
 }
 
-void 
+void
 drawrange(int x, int y, int r)
 {
 	int mx, my;
@@ -167,7 +168,7 @@ drawrange(int x, int y, int r)
  * niff - naval identify friend-or-foe
  * returns IFF_FRIEND, ENEMY, BOTH, NONE
  */
-int 
+int
 niff(int x, int y)
 {
 	int iff = IFF_NONE;
@@ -191,7 +192,7 @@ niff(int x, int y)
  * liff - land identify friend-or-foe
  * returns IFF_FRIEND, ENEMY, BOTH, NONE
  */
-int 
+int
 liff(int x, int y)
 {
 	int iff = IFF_NONE;

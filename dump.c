@@ -16,6 +16,7 @@ void dump_status(char *fmt, ...);
 FILE   *oldfp;
 FILE   *curfp;
 
+void
 dump()
 {
 /*	Empire 1.0 strongly urges the use of 'dump'.  'census' and
@@ -69,11 +70,13 @@ revert()
 	(void) fclose(curfp);
 	curfp = oldfp;
 }
+int
 map_rel(x)
 	int     x;
 {
 	return (x - (MAPSIZE / 2));
 }
+void
 cens()
 {
 
@@ -131,11 +134,12 @@ cens()
 			fprintf(curfp, "%4d", theitems[OIL]);
 			fprintf(curfp, "%5d", theitems[URAN]);
 			fprintf(curfp, "%4d%%", theitems[WORK]);
-			fprintf(curfp, "%4d%\n", theitems[TERR]);
+			fprintf(curfp, "%4d\n", theitems[TERR]);
 		}
 	fprintf(curfp, "    %d sector%s\n", nsect, splur(nsect));
 	return;
 }
+void
 comm()
 {
 	Sector *this_sector;
@@ -207,6 +211,7 @@ comm()
 	return;
 }
 
+void
 do_dump()
 {
 	Sector *this_sector;
@@ -355,6 +360,7 @@ do_dump()
 	return;
 }
 
+void
 do_map()
 {
 	int     cur_x, cur_y, x;
@@ -396,6 +402,7 @@ do_map()
 	ve_border(map_rel(min_x), map_rel(max_x) + 1, 1, "     ", "");
 
 }
+void
 ve_border(xmin, xmax, inc, indent, sep)
 	int     xmin;
 	int     xmax;

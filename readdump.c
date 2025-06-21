@@ -21,6 +21,7 @@ int chainsaw = FALSE;
 /*
  * readdump - Read and process dump file.
  */
+void
 readdump(fp)
 	FILE   *fp;
 {
@@ -79,10 +80,10 @@ readdump(fp)
 			&lp->thresh[PET], &lp->thresh[IRON],
 			&lp->thresh[DUST], &lp->thresh[BAR],
 			&lp->thresh[CRU], &lp->thresh[LCM],
-			&lp->thresh[HCM], &lp->thresh[RAD])==68) 
+			&lp->thresh[HCM], &lp->thresh[RAD])==68)
 				{chainsaw = FALSE;
 				 break;}
-		else 
+		else
 		  if (sscanf(buf, "%*d%*d %c %c %hd%hd %c %hd%hd%hd%hd%hd%hd\
 %hd%hd%hd%hd%hd%hd%hd%hd%hd%hd%hd%hd%hd%hd%hd%hd %c %c %c %c %c %c \
 %c %c %c %c %c %c%hd%hd%hd%hd%hd%hd%hd%hd%hd%hd%hd%hd %s %hd%hd\

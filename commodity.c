@@ -5,6 +5,7 @@
 /*
  * commodities - Read and process commodities file.
  */
+void
 commodities(fp)
 	FILE   *fp;
 {

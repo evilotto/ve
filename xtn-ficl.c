@@ -36,7 +36,7 @@ int bind_compar(const void *pa, const void *pb)
 	return a->key < b->key ? -1 : a->key > b->key;
 }
 
-Binding* 
+Binding*
 xtn_blookup(int key)
 {
 	Binding search = {key, NULL};
@@ -202,7 +202,7 @@ void xtn_error(const char *s)
 
 static int output = 0;
 /*
-int 
+int
 printf(const char *fmt, ...) {
 	va_list argp;
 	va_start(argp, fmt);

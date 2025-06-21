@@ -4,6 +4,7 @@
 
 Level  *newlev();
 
+void
 cutoff(fp)
 	FILE   *fp;
 {

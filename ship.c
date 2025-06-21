@@ -7,6 +7,7 @@
 /*
  * ship - Read and process ship reports.
  */
+void
 ship(fp)
 	FILE   *fp;
 {
@@ -61,7 +62,7 @@ ship(fp)
 		vp = sp->vp;
 		sscanf(&buf[40], "%hd%hd%hd%hd%hd%hd%hd%hd%hd%hd%hd",
 		       &vp->val[CIV], &vp->val[MIL], &vp->val[UW],
-		       &vp->val[FOOD], &vp->val[PL], &vp->val[HE], 
+		       &vp->val[FOOD], &vp->val[PL], &vp->val[HE],
 		       &vp->val[XL], &vp->val[LN],
 		       &vp->val[MOB], &vp->val[FUEL], &vp->val[TECH]);
 		mp = map[tx = xoffset(sp->x)][ty = yoffset(sp->y)];
@@ -94,6 +95,7 @@ ship(fp)
 /*
  * cargo - Read and process cargo reports.
  */
+void
 cargo(fp)
 	FILE   *fp;
 {
@@ -180,6 +182,7 @@ cargo(fp)
 /*
  * findship - Find ship or first ship of fleet.
  */
+int
 findship(theship, fleet)
 	register int theship;
 	register char fleet;
@@ -236,6 +239,7 @@ locateship(int *x, int *y, int sflg)
 /*
  * firstship - Locate first ship at x,y.
  */
+void
 firstship(x, y)
 	int     x, y;
 {
@@ -264,6 +268,7 @@ firstship(x, y)
 /*
  * nextship - Advance ship index to next ship at x,y.
  */
+void
 nextship(x, y)
 	int     x, y;
 {
@@ -301,6 +306,7 @@ nextship(x, y)
 /*
  * previousship - Back up to previous ship at x,y.
  */
+void
 previousship(x, y)
 	int     x, y;
 {
@@ -335,6 +341,7 @@ previousship(x, y)
 		}
 	}
 }
+int
 locship(n)
 	int     n;
 {
@@ -378,7 +385,7 @@ fmtship(Ship *s, char *buf)
 				 /* sh    */ "%3d ",
 				 s->number, s->type, s->x, s->y, s->fleet,
 				 vp->val[EFF], vp->val[MOB],
-				 vp->val[CIV], vp->val[MIL], vp->val[UW], 
+				 vp->val[CIV], vp->val[MIL], vp->val[UW],
 				 vp->val[GUN], vp->val[SH]);
 	return buf;
 }

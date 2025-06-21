@@ -3,6 +3,7 @@
 # include "ve.h"
 #include <errno.h>
 
+int
 skipword(fp)
 	FILE   *fp;
 {
@@ -18,6 +19,7 @@ skipword(fp)
 }
 
 
+void
 pitchline(fp)
 	FILE   *fp;
 {

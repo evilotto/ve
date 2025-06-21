@@ -137,10 +137,10 @@
 #define LCOLOR_BOTH 6
 
 #define ACOLOR_ANY 7
- 
+
 #define GCOLOR_RANGE 8
 
-#define	VALUESIZE	45		    /* Number of values in
+#define	VALUESIZE	46		    /* Number of values in
 					     * sector */
 
 typedef struct value {
@@ -272,6 +272,85 @@ extern char *profile_file;
 
 extern int distance(int sx, int sy, int ex, int ey);
 extern int niff(int x, int y);
+
+/* ve.c */
+extern int xoffset(int c);
+extern int yoffset(int c);
+extern void profile();
+extern void center(int x, int y, int flag);
+extern void presetty();
+extern void commands();
+extern void endtty();
+extern void updatescreen(int x, int y);
+extern int getac();
+extern void query();
+extern void mark();
+extern void survey(char *sp);
+extern void checkshiporplane(char c, int x, int y);
+extern void ve_getline(char *bp, char *pr, int ex);
+extern void version();
+extern void maxxy(int x, int y);
+extern char merge(char uc, int x, int y, int flg);
+/* map.c */
+extern void mapdr(int sflg);
+extern void drawrange(int x, int y, int r);
+extern void li(int x, int y, int r);
+extern int liff(int x, int y);
+/* dump.c */
+extern void dump();
+extern void do_map();
+extern void do_dump();
+extern int divert(char *name);
+extern int map_rel(int x);
+extern void cens();
+extern void comm();
+extern void ve_border(int xmin, int xmax, int inc, char *indent, char *sep);
+/* ship.c */
+extern int locship(int n);
+extern int findship(int ship, char fleet);
+extern void firstship(int x, int y);
+extern void nextship(int x, int y);
+extern void previousship(int x, int y);
+/* plane.c */
+extern int locplane(int n);
+extern int findplane(int plane, char wing);
+extern void firstplane(int x, int y);
+extern void nextplane(int x, int y);
+extern void previousplane(int x, int y);
+/* unit.c */
+extern int locunit(int n);
+extern int findunit(int unit, char army);
+extern void firstunit(int x, int y);
+extern void nextunit(int x, int y);
+extern void previousunit(int x, int y);
+/* satellite.c */
+// extern void satellite(FILE *fp);
+extern int isamap(FILE *fp);
+extern void getspydata(char *buf);
+extern void getshipdata(char *buf);
+/* census.c */
+//extern void census(FILE *fp);
+extern void censusinfo(int x, int y);
+extern void censusheader(int mode, int lmode);
+/* lookout.c */
+extern void shiplookat(char *p, int cnum);
+extern void shiplook(char *p, int cnum);
+/* misk before cutoff */
+int skipword(FILE *dp);
+void pitchline(FILE *fp);
+/* radar.c */
+extern int readradarlines(FILE *fp, int *xp, int *yp, float *rp);
+extern void presetradarmap(char rm[RADARSIZE][RADARSIZE]);
+extern int readradarscan(FILE *fp, char rm[RADARSIZE][RADARSIZE], int *xr, int *yr);
+extern void editradarscan(char rm[RADARSIZE][RADARSIZE], int *yr, int *xr, int  *xp, int *yp);
+/* cutoff.c */
+// extern void cutoff(FILE *fp);
+/* level.c */
+// extern void level(FILE *fp);
+/* coastwatch.c */
+// extern void coastwatch(FILE *fp);
+/* commodity.c */
+// extern void commodities(FILE *fp);
 
 extern Sector *map[MAPSIZE][MAPSIZE];
 extern Overlay *ovl[MAPSIZE][MAPSIZE];

@@ -5,6 +5,7 @@
 /*
  * findplane Find plane or first plane of wing.
  */
+int
 findplane(plane, wing)
 	register int plane;
 	register char wing;
@@ -25,6 +26,7 @@ findplane(plane, wing)
 /*
  * firstplane Locate first plane at x,y.
  */
+void
 firstplane(x, y)
 	int     x, y;
 {
@@ -86,6 +88,7 @@ locateplane(int *px, int *py, int sflg)
 /*
  * nextplane - Advance plane index to next plane at x,y.
  */
+void
 nextplane(x, y)
 	int     x, y;
 {
@@ -121,6 +124,7 @@ nextplane(x, y)
 /*
  * plane - Read and process plane reports.
  */
+void
 plane(inpf)
 	FILE   *inpf;
 {
@@ -189,6 +193,7 @@ plane(inpf)
 /*
  * previousplane - Back up to previous plane at x,y.
  */
+void
 previousplane(x, y)
 	int     x, y;
 {
@@ -221,6 +226,7 @@ previousplane(x, y)
 		}
 	}
 }
+int
 locplane(n)
 	int     n;
 {

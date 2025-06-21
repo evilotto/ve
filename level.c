@@ -4,6 +4,7 @@
 
 Level  *newlev();
 
+void
 level(fp)
 	FILE   *fp;
 {

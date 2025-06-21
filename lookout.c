@@ -40,6 +40,7 @@ Item    stypes[] = {
 extern char *findblank();
 extern char *findchar();
 
+void
 lookout(fp)
 	FILE   *fp;
 {
@@ -170,6 +171,7 @@ lookout(fp)
 			vp->dist[i] = '.';
 	}
 }
+void
 shiplook(p, cnum)
 	char   *p;
 	int     cnum;

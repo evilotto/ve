@@ -3,6 +3,7 @@
 
 /* satellite.c - satellite routines */
 
+void
 satellite(fp)
 	FILE   *fp;
 {
@@ -108,6 +109,7 @@ satellite(fp)
 /* isamap - return true if input is the start of a satellite map  */
 /*	landsat 2 #158 at -33,-25 efficiency 100%, max range 13.7 */
 
+int
 isamap(fp)
 	FILE   *fp;
 {
@@ -139,6 +141,7 @@ isamap(fp)
 }
 
 
+void
 getspydata(buf)				    /* The guts of spy.c */
 	char   *buf;
 {
@@ -177,6 +180,7 @@ getspydata(buf)				    /* The guts of spy.c */
 }
 
 
+void
 getshipdata(buf)			    /* The guts of ship() */
 	char   *buf;
 {

@@ -2,6 +2,7 @@
 
 # include	"ve.h"
 
+void
 coastwatch(fp)
 	FILE   *fp;
 {

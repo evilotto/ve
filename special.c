@@ -13,6 +13,7 @@
 /*
  * special - Read and process special file.
  */
+void
 special(fp)
 	FILE   *fp;
 {

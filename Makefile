@@ -55,7 +55,7 @@ SRCS	= 	census.c \
 		slist.c \
 		$(END)
 
-XTN = FICL
+XTN = ATLAST
 default: ve
 
 ### ATLAST 

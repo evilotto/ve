@@ -15,6 +15,7 @@ Unit * newunit()
 /*
  * unit - Read and process unit reports.
  */
+void
 unit(fp)
 	FILE   *fp;
 {
@@ -104,6 +105,7 @@ unit(fp)
 /*
  * lcargo - Read and process lcargo reports.
  */
+void
 lcargo(fp)
 	FILE   *fp;
 {
@@ -190,6 +192,7 @@ lcargo(fp)
 /*
  * findunit - Find unit or first unit of army.
  */
+int
 findunit(theunit, army)
 	register int theunit;
 	register char army;
@@ -212,6 +215,7 @@ findunit(theunit, army)
 /*
  * firstunit - Locate first unit at x,y.
  */
+void
 firstunit(x, y)
 	int     x, y;
 {
@@ -275,6 +279,7 @@ locateunit(int *sx, int *sy, int sflg)
 /*
  * nextunit - Advance unit index to next unit at x,y.
  */
+void
 nextunit(x, y)
 	int     x, y;
 {
@@ -312,6 +317,7 @@ nextunit(x, y)
 /*
  * previousunit - Back up to previous unit at x,y.
  */
+void
 previousunit(x, y)
 	int     x, y;
 {
@@ -346,6 +352,7 @@ previousunit(x, y)
 		}
 	}
 }
+int
 locunit(n)
 	int     n;
 {

@@ -25,7 +25,7 @@ int bind_compar(const void *pa, const void *pb)
 	return a->key < b->key ? -1 : a->key > b->key;
 }
 
-Binding* 
+Binding*
 xtn_blookup(int key)
 {
 	Binding search = {key, NULL};
@@ -41,8 +41,12 @@ xtn_bind(int key, dictword *dw)
 		cur->dw = dw;
 	} else {
 		if (++Bcount >= Bsize) {
+			void *_b = bindings;
 			Bsize *= 2;
-			bindings = realloc(bindings, Bsize * sizeof(Binding));
+			if ((_b = realloc(_b, Bsize * sizeof(Binding))) != NULL) {
+				bindings = _b;
+			}
+			// bindings = realloc(bindings, Bsize * sizeof(Binding));
 		}
 		(bindings + Bcount-1)->key = key;
 		(bindings + Bcount-1)->dw = dw;
@@ -180,7 +184,7 @@ void xtn_error(const char *s)
 }
 
 static int output = 0;
-int 
+int
 printf(const char *fmt, ...) {
 	va_list argp;
 	va_start(argp, fmt);

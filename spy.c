@@ -5,6 +5,7 @@
 /*
  * spy - Read and process spy reports.
  */
+void
 spy(fp)
 FILE   *fp;
 {

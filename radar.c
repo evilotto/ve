@@ -2,6 +2,12 @@
 
 #include	"ve.h"
 
+void shiprad(char des, int tx, int ty);
+void satrad(int tx, int ty);
+int nextscan(FILE *fp);
+int readradarscan(FILE *fp, char rm[RADARSIZE][RADARSIZE], int *xr, int *yr);
+
+void
 editradarscan(rm, xr, yr, xp, yp)
 	char    rm[RADARSIZE][RADARSIZE];
 	int    *yr, *xr;
@@ -36,6 +42,7 @@ editradarscan(rm, xr, yr, xp, yp)
 }
 
 
+void
 presetradarmap(rm)
 	char    rm[RADARSIZE][RADARSIZE];
 {
@@ -45,6 +52,7 @@ presetradarmap(rm)
 		for (y = 0; y < RADARSIZE; y++)
 			rm[x][y] = ' ';
 }
+void
 radarscan(fp)
 	FILE   *fp;
 {
@@ -56,7 +64,7 @@ radarscan(fp)
 	while (nextscan(fp)) {
 		if (!readradarlines(fp, &xp, &yp, &rp)) {
 			if (isamap(fp)) {
-				if (!readradarlines(fp, &xp, &yp, &rp)) 
+				if (!readradarlines(fp, &xp, &yp, &rp))
 					continue;
 			} else
 				continue;
@@ -69,6 +77,7 @@ radarscan(fp)
 		editradarscan(radarmap, &xr, &yr, &xp, &yp);
 	}
 }
+int
 nextscan(fp)
 	FILE   *fp;
 {
@@ -103,6 +112,7 @@ nextscan(fp)
 
 	return (1);			    /* success at last */
 }
+int
 readradarlines(fp, xp, yp, rp)
 	FILE   *fp;
 	int    *xp, *yp;
@@ -120,6 +130,7 @@ readradarlines(fp, xp, yp, rp)
 	pitchline(fp);
 	return (TRUE);
 }
+int
 readradarscan(fp, rm, xr, yr)
 	FILE   *fp;
 	char    rm[RADARSIZE][RADARSIZE];
@@ -169,6 +180,7 @@ readradarscan(fp, rm, xr, yr)
 /*
  * shiprad - Process ship sightings by radar.
  */
+void
 shiprad(des, tx, ty)
 	char    des;
 	int     tx, ty;
@@ -202,6 +214,7 @@ shiprad(des, tx, ty)
 /*
  * satrad - Process satellite sightings by radar.
  */
+void
 satrad(tx, ty)
 	int     tx, ty;
 {

@@ -5,6 +5,7 @@
 /*
  * resource - Read and process sector resource file.
  */
+void
 resource(fp)
 	FILE   *fp;
 {
