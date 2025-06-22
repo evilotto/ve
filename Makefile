@@ -64,7 +64,7 @@ ATLAST_SRC = atlast/atlast-64/atlast.c
 ATL_FLAGS = -Iatlast/atlast-64/ -DEXPORT -DREADONLYSTRINGS
 CFLAGS += ${ATL_FLAGS}
 OBJS += xtn-atlast.o 
-LDLIBS += -lm atlast/atlast-64/atlast.o 
+LDLIBS += atlast/atlast-64/atlast.o -lm
 ${ATLAST_SRC}:
 	git clone https://github.com/Fourmilab/atlast.git
 else ifeq ($(XTN),FICL)
